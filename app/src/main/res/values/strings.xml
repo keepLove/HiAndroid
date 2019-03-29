@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Hi Android</string>
+    <string name="layout_pattern_practice">实现</string>
+    <string name="layout_pattern_content">介绍</string>
+</resources>
