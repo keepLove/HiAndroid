@@ -3,6 +3,27 @@
 
     <string-array name="main_list">
         <item>patterns</item>
+        <item>java</item>
+        <item>android</item>
+        <item>kotlin</item>
+    </string-array>
+
+    <string-array name="java_list">
+        <item>null</item>
+    </string-array>
+
+    <string-array name="kotlin_list">
+        <item>kotlin实现单例的5种方式</item>
+    </string-array>
+
+    <string-array name="android_list">
+        <item>Bus</item>
+    </string-array>
+
+    <string-array name="bus_list">
+        <item>LiveDataBus</item>
+        <item>RxBus</item>
+        <item>EventBus</item>
     </string-array>
 
     <string-array name="patterns_list">

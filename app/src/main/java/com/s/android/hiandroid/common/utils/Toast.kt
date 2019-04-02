@@ -48,3 +48,11 @@ class ToastUtils {
 fun showToast(message: String?, duration: Int = Toast.LENGTH_SHORT, drawable: Int = 0) {
     ToastUtils.showToast(message, duration, drawable)
 }
+
+/**
+ * 显示toast
+ */
+fun showToastAndLog(message: String?, duration: Int = Toast.LENGTH_SHORT, drawable: Int = 0) {
+    ToastUtils.showToast(message, duration, drawable)
+    logD("$message")
+}

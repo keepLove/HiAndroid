@@ -10,6 +10,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.java.JavaActivity" />
+        <activity android:name=".ui.android.AndroidActivity" />
+        <activity android:name=".ui.android.bus.BusActivity" />
+        <activity android:name=".ui.kotlin.KotlinActivity" />
+        <activity android:name=".ui.android.bus.LiveDataBusActivity" />
+        <activity android:name=".ui.common.PracticeActivity" />
         <activity android:name=".ui.patterns.BasePatternsActivity" />
         <activity android:name=".ui.patterns.PatternsActivity" />
         <activity android:name=".ui.main.MainActivity">
