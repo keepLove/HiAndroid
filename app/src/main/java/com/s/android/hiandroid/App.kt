@@ -1,6 +1,7 @@
 package com.s.android.hiandroid
 
 import android.app.Application
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.s.android.hiandroid.common.utils.LogUtils
 
 class App : Application() {
@@ -13,5 +14,8 @@ class App : Application() {
         super.onCreate()
         app = this
         LogUtils.init(this)
+        LiveEventBus.get()
+            .config()
+            .lifecycleObserverAlwaysActive(false)
     }
 }
