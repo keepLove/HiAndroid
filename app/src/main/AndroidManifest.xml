@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.s.android.hiandroid">
+          package="com.s.android.hiandroid">
 
     <application
         android:name=".App"
@@ -10,18 +10,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.android.bus.RxBusActivity"></activity>
-        <activity android:name=".ui.java.JavaActivity" />
-        <activity android:name=".ui.android.AndroidActivity" />
-        <activity android:name=".ui.android.bus.BusActivity" />
-        <activity android:name=".ui.kotlin.KotlinActivity" />
-        <activity android:name=".ui.android.bus.LiveDataBusActivity" />
-        <activity android:name=".ui.common.PracticeActivity" />
-        <activity android:name=".ui.patterns.BasePatternsActivity" />
-        <activity android:name=".ui.patterns.PatternsActivity" />
+        <activity android:name=".ui.android.bus.EventBusActivity">
+        </activity>
+        <activity android:name=".ui.android.bus.RxBusActivity"/>
+        <activity android:name=".ui.java.JavaActivity"/>
+        <activity android:name=".ui.android.AndroidActivity"/>
+        <activity android:name=".ui.android.bus.BusActivity"/>
+        <activity android:name=".ui.kotlin.KotlinActivity"/>
+        <activity android:name=".ui.android.bus.LiveDataBusActivity"/>
+        <activity android:name=".ui.common.PracticeActivity"/>
+        <activity android:name=".ui.patterns.BasePatternsActivity"/>
+        <activity android:name=".ui.patterns.PatternsActivity"/>
         <activity android:name=".ui.main.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
             </intent-filter>
         </activity>
 
@@ -29,9 +31,9 @@
             android:name=".launch"
             android:targetActivity=".ui.main.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
     </application>

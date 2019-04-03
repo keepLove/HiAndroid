@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.android.bus.EventBusActivity">
+
+    <include
+            android:id="@+id/toolbar"
+            layout="@layout/layout_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <Button
+            android:id="@+id/bt_send"
+            style="@style/HiButton"
+            android:text="发送消息"/>
+
+    <Button
+            android:id="@+id/bt_send_async"
+            style="@style/HiButton"
+            android:text="发送异步消息"/>
+
+    <Button
+            android:id="@+id/bt_send_other"
+            style="@style/HiButton"
+            android:text="发送消息,其它页面接收消息"/>
+
+</LinearLayout>
