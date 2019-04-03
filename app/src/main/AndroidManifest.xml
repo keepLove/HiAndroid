@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.android.bus.RxBusActivity"></activity>
         <activity android:name=".ui.java.JavaActivity" />
         <activity android:name=".ui.android.AndroidActivity" />
         <activity android:name=".ui.android.bus.BusActivity" />

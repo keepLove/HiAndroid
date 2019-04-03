@@ -21,10 +21,10 @@ class LiveDataBusActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         LiveEventBus.get()
-            .with("key_name", String::class.java)
-            .observe(this, Observer {
-                showToastAndLog("消息来了：$it")
-            })
+                .with("key_name", String::class.java)
+                .observe(this, Observer {
+                    showToastAndLog("消息来了：$it")
+                })
         LiveDataBus.with<String>("start_send_message")
                 .observe(this, Observer {
                     showToastAndLog("消息来了：$it")
@@ -62,7 +62,7 @@ class LiveDataBusActivity : BaseActivity() {
             LiveDataBus.with<String>("button3").postValue("返回页面消息发送")
         }
         tv_practice.text = """
-
+// 更成熟的LiveEventBus：https://github.com/JeremyLiao/LiveEventBus
 object LiveDataBus {
 
     private val liveDataBus = mutableMapOf<String, BusLiveData<Any>>()
