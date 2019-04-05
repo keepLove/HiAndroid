@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.jeremyliao.liveeventbus.LiveEventBus
+//import com.jeremyliao.liveeventbus.LiveEventBus
 import com.s.android.hiandroid.common.bus.LiveDataBus
 import com.s.android.hiandroid.common.bus.RxBus
 import com.s.android.hiandroid.common.utils.getStringArray
@@ -48,7 +48,7 @@ class BusActivity : BaseStringListActivity() {
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
         when (position) {
             0 -> {
-                LiveEventBus.get().with("key_name").setValue("00000000")
+//                LiveEventBus.get().with("key_name").setValue("00000000")
                 LiveDataBus.with<String>("start_send_message").setValue("开始就发送消息，试试未打开的页面能否接收到消息，出现了就说明有问题.")
                 LiveDataBus.with<String>("start_send_message_forever")
                     .setValue("forever:开始就发送消息，试试未打开的页面能否接收到消息，出现了就说明有问题.")

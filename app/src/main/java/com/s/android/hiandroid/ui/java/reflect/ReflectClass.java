@@ -1,16 +1,38 @@
 package com.s.android.hiandroid.ui.java.reflect;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import kotlin.jvm.JvmStatic;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
 import java.util.Arrays;
 
-public class ReflectClass extends ReflectBaseClass {
+public class ReflectClass<T> extends ReflectBaseClass implements ReflectInterface {
 
     public String testPublicField = "class public field";
     protected String testProtectedField = "class protected field";
     String testField = "class field";
     private String testPrivateField = "class private field";
+    public T genericity;
+    public Class<T> clazz;
+
+    public static void main(String[] args) {
+        Class<ReflectClass> aClass = ReflectClass.class;
+        try {
+            ReflectClass reflectClass = aClass.newInstance();
+            Field genericity = aClass.getDeclaredField("genericity");
+            genericity.setAccessible(true);
+            genericity.set(reflectClass, "泛型字段");
+            System.out.println(genericity.get(reflectClass));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        ReflectClass<String> reflectClass = new ReflectClass<>();
+//        reflectClass.testConstructorGet();
+//        reflectClass.getOtherMethod();
+//        reflectClass.getFieldPlay();
+//        reflectClass.getConstructorPlay();
+//        reflectClass.getClazzType();
+    }
 
     public ReflectClass() {
         super();
@@ -22,9 +44,24 @@ public class ReflectClass extends ReflectBaseClass {
         System.out.println("class constructor = " + message);
     }
 
-    public static void main(String[] args) {
-        ReflectClass reflectClass = new ReflectClass();
-        reflectClass.testConstructorGet();
+    /**
+     * 获取泛型的类型
+     */
+    public void getClazzType() {
+        // 父类必须要有同样泛型
+        Type type = this.getClass().getGenericSuperclass();
+        System.out.println(type);
+        if (type instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            clazz = (Class<T>) parameterizedType.getActualTypeArguments()[0];
+            System.out.println(clazz);
+        }
+    }
+
+    @JvmStatic
+    @Override
+    public String testInterface(String message) {
+        return "test interface   === " + message;
     }
 
     public void testPublicMethod() {
@@ -110,7 +147,7 @@ public class ReflectClass extends ReflectBaseClass {
             System.out.println("获取一个用于描述类中定义的构造器的Class对象 ====== " + declaringClass);
             // 返回整型数值，用不同的位开关描述访问修饰符的使用状况
             int modifiers = constructor.getModifiers();
-            System.out.println("返回整型数值，用不同的位开关描述访问修饰符的使用状况 ===== " + modifiers);
+            System.out.println("返回整型数值，用不同的位开关描述访问修饰符的使用状况 ===== " + Modifier.toString(modifiers));
             // 获取描述方法抛出的异常类型的Class对象数组
             Class<?>[] exceptionTypes = constructor.getExceptionTypes();
             System.out.println("获取描述方法抛出的异常类型的Class对象数组  ===== " + Arrays.toString(exceptionTypes));
@@ -158,7 +195,7 @@ public class ReflectClass extends ReflectBaseClass {
             System.out.println("获取属性类型的Class类型对象 ====== " + declaringClass);
             // 返回整型数值，用不同的位开关描述访问修饰符的使用状况
             int modifiers = testPublicField.getModifiers();
-            System.out.println("返回整型数值，用不同的位开关描述访问修饰符的使用状况 ===== " + modifiers);
+            System.out.println("返回整型数值，用不同的位开关描述访问修饰符的使用状况 ===== " + Modifier.toString(modifiers));
             // 获取属性类型的Class类型对象
             Class<?> type = testPublicField.getType();
             System.out.println("获取属性类型的Class类型对象 ==== " + type);
@@ -208,7 +245,7 @@ public class ReflectClass extends ReflectBaseClass {
             System.out.println("获取方法的Class对象  ====== " + declaringClass);
             // 返回整型数值，用不同的位开关描述访问修饰符的使用状况
             int modifiers = testPublicMethod.getModifiers();
-            System.out.println("返回整型数值，用不同的位开关描述访问修饰符的使用状况 ===== " + modifiers);
+            System.out.println("返回整型数值，用不同的位开关描述访问修饰符的使用状况 ===== " + Modifier.toString(modifiers));
             // 获取用于描述方法抛出的异常类型的Class对象数组
             Class<?>[] exceptionTypes = testPublicMethod.getExceptionTypes();
             System.out.println("获取用于描述方法抛出的异常类型的Class对象数组  ===== " + Arrays.toString(exceptionTypes));
@@ -230,7 +267,7 @@ public class ReflectClass extends ReflectBaseClass {
     public void testConstructorGet() {
         try {
             // 1. 获取ReflectClass类的Class对象
-            Class reflectClassClass = ReflectClass.class;
+            Class<?> reflectClassClass = ReflectClass.class;
             // 2.1 通过Class对象获取Constructor类对象，从而调用无参构造方法
             // 注：构造函数的调用实际上是在newInstance()，而不是在getConstructor()中调用
             Object instance = reflectClassClass.getConstructor().newInstance();
@@ -260,6 +297,44 @@ public class ReflectClass extends ReflectBaseClass {
             f.set(mReflectClass, "Carson_Ho");
             // 6. 获取新创建ReflectClass对象的的name属性 & 输出
             System.out.println(f.get(mReflectClass));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 其它的方法
+     */
+    public void getOtherMethod() {
+        try {
+            Class<?> reflectClassClass = ReflectClass.class;
+            Object instance = reflectClassClass.newInstance();
+            // 获取泛型
+            TypeVariable[] typeParameters = reflectClassClass.getTypeParameters();
+            for (TypeVariable variable : typeParameters) {
+                System.out.println("获取泛型  ===  " + variable.getName());
+            }
+            // 获取类实现的所有接口
+            Type[] genericInterfaces = reflectClassClass.getGenericInterfaces();
+            for (Type type : genericInterfaces) {
+                System.out.println("接口类型  ==== " + type.toString());
+            }
+            Class[] interfaces = reflectClassClass.getInterfaces();
+            for (Class<?> anInterface : interfaces) {
+                if (anInterface.isAssignableFrom(ReflectInterface.class)) {
+                    Method method = anInterface.getDeclaredMethod("testInterface", String.class);
+                    System.out.println(method.invoke(instance, "反射调用方法"));
+                }
+            }
+            // 获取注解(只能获取到 RUNTIME 类型的注解)
+            Method testInterface = reflectClassClass.getMethod("testInterface", String.class);
+            Annotation[] annotations = testInterface.getAnnotations();
+            System.out.println("获取注解  === " + Arrays.toString(annotations));
+            Annotation[] declaredAnnotations = testInterface.getDeclaredAnnotations();
+            System.out.println("获取注解  === " + Arrays.toString(declaredAnnotations));
+            // Class.isEnum()
+            // Class.getEnumConstants()
+            // java.lang.reflect.Field.isEnumConstant()
         } catch (Exception e) {
             e.printStackTrace();
         }

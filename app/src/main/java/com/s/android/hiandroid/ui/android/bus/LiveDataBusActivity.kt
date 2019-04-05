@@ -3,7 +3,7 @@ package com.s.android.hiandroid.ui.android.bus
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import com.jeremyliao.liveeventbus.LiveEventBus
+//import com.jeremyliao.liveeventbus.LiveEventBus
 import com.s.android.hiandroid.common.bus.LiveDataBus
 import com.s.android.hiandroid.common.utils.showToast
 import com.s.android.hiandroid.common.utils.showToastAndLog
@@ -20,11 +20,11 @@ class LiveDataBusActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        LiveEventBus.get()
-                .with("key_name", String::class.java)
-                .observe(this, Observer {
-                    showToastAndLog("消息来了：$it")
-                })
+//        LiveEventBus.get()
+//                .with("key_name", String::class.java)
+//                .observe(this, Observer {
+//                    showToastAndLog("消息来了：$it")
+//                })
         LiveDataBus.with<String>("start_send_message")
                 .observe(this, Observer {
                     showToastAndLog("消息来了：$it")
