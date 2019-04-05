@@ -9,7 +9,7 @@
     </string-array>
 
     <string-array name="java_list">
-        <item>null</item>
+        <item>reflect(反射)</item>
     </string-array>
 
     <string-array name="kotlin_list">
