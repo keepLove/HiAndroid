@@ -10,7 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.common.WebActivity"></activity>
+        <activity android:name=".ui.android.bluetooth.BluetoothActivity">
+        </activity>
+        <activity android:name=".ui.common.WebActivity"/>
         <activity android:name=".ui.java.reflect.ReflectActivity"/>
         <activity android:name=".ui.android.bus.EventBusActivity"/>
         <activity android:name=".ui.android.bus.RxBusActivity"/>
