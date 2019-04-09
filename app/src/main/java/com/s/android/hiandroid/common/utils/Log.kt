@@ -7,6 +7,7 @@ import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import com.orhanobut.logger.PrettyFormatStrategy
 import com.s.android.hiandroid.BuildConfig
+import com.s.android.hiandroid.R
 
 
 /**
@@ -15,15 +16,13 @@ import com.s.android.hiandroid.BuildConfig
  */
 object LogUtils {
 
-    private const val TAG = "淘衣材"
-    private const val METHOD_COUNT = 5
-
     /**
      * 初始化.固定Tag.全级别Log,隐藏线程信息.显示行数
      */
     fun init(context: Context) {
+        val tag = context.resources.getString(R.string.app_name)
         Logger.addLogAdapter(object :
-            AndroidLogAdapter(PrettyFormatStrategy.newBuilder().tag(TAG).methodCount(METHOD_COUNT).build()) {
+                AndroidLogAdapter(PrettyFormatStrategy.newBuilder().tag(tag).methodCount(5).build()) {
             override fun isLoggable(priority: Int, tag: String?): Boolean {
                 return BuildConfig.DEBUG
             }

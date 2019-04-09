@@ -5,6 +5,7 @@ import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.s.android.hiandroid.R
 import com.s.android.hiandroid.common.utils.getStringArray
+import com.s.android.hiandroid.ui.android.bluetooth.BluetoothActivity
 import com.s.android.hiandroid.ui.android.bus.BusActivity
 import com.s.android.hiandroid.ui.common.BaseStringListActivity
 
@@ -19,7 +20,8 @@ class AndroidActivity : BaseStringListActivity() {
             0 -> {
                 startActivity(Intent(this, BusActivity::class.java))
             }
-            else -> {
+            1 -> {
+                startActivity(Intent(this, BluetoothActivity::class.java))
             }
         }
     }
