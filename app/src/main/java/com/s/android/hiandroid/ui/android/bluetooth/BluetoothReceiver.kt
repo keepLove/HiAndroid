@@ -32,31 +32,3 @@ class BluetoothReceiver(private val bluetoothListener: BluetoothListener) : Broa
     }
 
 }
-
-interface BluetoothListener {
-
-    /**
-     * 搜索到
-     */
-    fun discovery(bluetoothDevice: BluetoothDevice)
-
-    /**
-     * 搜索完成
-     */
-    fun discoveryFinish()
-
-    /**
-     * 可检测到模式发生变化时收到通知
-     */
-    fun scanModeChanged(scanMode: Int)
-
-    /**
-     * 读取到的消息
-     */
-    fun readMessage(byteArray: ByteArray, size: Int)
-
-    /**
-     * 连接状态改变
-     */
-    fun connectionStateChange(state: Int)
-}

@@ -4,7 +4,16 @@
 
     <!-- 蓝牙 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <!-- 启动设备发现或操作蓝牙设置 -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- 如果您想声明您的应用程序仅对BLE-capable设备可用，android:required="true" -->
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
+    <!-- 在Android5.0之前，是默认申请GPS硬件功能的。而在Android 5.0 之后，需要在manifest 中申明GPS硬件模块功能的使用。 -->
+    <uses-feature android:name="android.hardware.location.gps" />
+    <!-- 在Android 6.0 及以上，还需要打开位置权限。如果应用没有位置权限，蓝牙扫描功能不能使用（其它蓝牙操作例如连接蓝牙设备和写入数据不受影响）。-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".App"
@@ -16,7 +25,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.android.bluetooth.BluetoothActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity android:name=".ui.common.WebActivity" />
         <activity android:name=".ui.java.reflect.ReflectActivity" />
         <activity android:name=".ui.android.bus.EventBusActivity" />
@@ -44,6 +53,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
+
+        <activity android:name=".ui.android.bluetooth.BluetoothListActivity" />
     </application>
 
 </manifest>

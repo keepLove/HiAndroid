@@ -1,29 +1,30 @@
-package com.s.android.hiandroid.ui.android
+package com.s.android.hiandroid.ui.android.bluetooth
 
 import android.content.Intent
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.s.android.hiandroid.R
 import com.s.android.hiandroid.common.utils.getStringArray
-import com.s.android.hiandroid.ui.android.bluetooth.BluetoothListActivity
-import com.s.android.hiandroid.ui.android.bus.BusActivity
 import com.s.android.hiandroid.ui.common.BaseStringListActivity
 
-class AndroidActivity : BaseStringListActivity() {
+class BluetoothListActivity : BaseStringListActivity() {
 
     override fun getItems(): MutableList<String> {
-        return getStringArray(R.array.android_list)
+        return getStringArray(R.array.bluetooth_list)
     }
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
         when (position) {
             0 -> {
-                startActivity(Intent(this, BusActivity::class.java))
+                startActivity(Intent(this, BluetoothActivity::class.java).apply {
+                    putExtra("type", "classic bluetooth")
+                })
             }
             1 -> {
-                startActivity(Intent(this, BluetoothListActivity::class.java))
+                startActivity(Intent(this, BluetoothActivity::class.java).apply {
+                    putExtra("type", "bluetooth low energy")
+                })
             }
         }
     }
-
 }

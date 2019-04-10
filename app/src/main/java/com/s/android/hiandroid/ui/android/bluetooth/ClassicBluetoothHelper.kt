@@ -1,13 +1,10 @@
 package com.s.android.hiandroid.ui.android.bluetooth
 
-import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
-import android.content.Intent
 import android.content.IntentFilter
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
 import java.io.InputStream
 import java.io.OutputStream
@@ -16,10 +13,9 @@ import java.util.*
 /**
  * 经典蓝牙
  */
-class ClassicBluetoothHelper(private val activity: FragmentActivity,
-                             private val bluetoothListener: BluetoothListener) {
+class ClassicBluetoothHelper(activity: FragmentActivity,
+                             bluetoothListener: BluetoothListener) : BluetoothImpl(activity, bluetoothListener) {
 
-    private var bluetoothAdapter: BluetoothAdapter? = null
     /**
      * 蓝牙广播
      */
@@ -34,20 +30,11 @@ class ClassicBluetoothHelper(private val activity: FragmentActivity,
     }
 
     /**
-     * 连接状态
-     */
-    var state: Int = STATE_NONE
-    /**
      * uuid
      */
     private val uuid: UUID by lazy {
         UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66")
     }
-
-    /**
-     * 是否支持蓝牙
-     */
-    fun isBluetooth(): Boolean = bluetoothAdapter != null
 
     /**
      * 注册蓝牙广播
@@ -64,7 +51,7 @@ class ClassicBluetoothHelper(private val activity: FragmentActivity,
     /**
      * 销毁时取消连接
      */
-    fun onDestroy() {
+    override fun onDestroy() {
         // 取消注册广播
         activity.unregisterReceiver(bluetoothReceiver)
         // 取消完成连接的线程
@@ -87,30 +74,6 @@ class ClassicBluetoothHelper(private val activity: FragmentActivity,
     }
 
     /**
-     * 判断是否打开蓝牙
-     */
-    fun isEnabled(): Boolean {
-        return bluetoothAdapter?.isEnabled ?: false
-    }
-
-    /**
-     * 打开蓝牙
-     */
-    fun enable(requestCode: Int) {
-        // 弹窗申请权限打开蓝牙
-        activity.startActivityForResult(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), requestCode)
-        // 不做提示，强行打开
-        // bluetoothAdapter?.enable()
-    }
-
-    /**
-     * 获取已经配对的设备
-     */
-    fun getBondedDevices(): Set<BluetoothDevice>? {
-        return bluetoothAdapter?.bondedDevices
-    }
-
-    /**
      * 开始搜索
      *
      *  注意：执行设备发现对于蓝牙适配器而言是一个非常繁重的操作过程，并且会消耗大量资源。
@@ -119,7 +82,7 @@ class ClassicBluetoothHelper(private val activity: FragmentActivity,
      * 因此不应该在处于连接状态时执行发现操作。
      * 首先需要取消搜索
      */
-    fun startDiscovery() {
+    override fun startDiscovery() {
         cancelDiscovery()
         bluetoothAdapter?.startDiscovery()
     }
@@ -127,7 +90,7 @@ class ClassicBluetoothHelper(private val activity: FragmentActivity,
     /**
      * 取消搜索
      */
-    fun cancelDiscovery() {
+    override fun cancelDiscovery() {
         bluetoothAdapter?.apply {
             if (isDiscovering) {
                 cancelDiscovery()
@@ -135,83 +98,9 @@ class ClassicBluetoothHelper(private val activity: FragmentActivity,
         }
     }
 
-    /**
-     * 获取本地蓝牙名称
-     */
-    fun getLocalName(): String {
-        return bluetoothAdapter?.name ?: ""
-    }
-
-    /**
-     * 获取本地蓝牙地址
-     */
-    @SuppressLint("HardwareIds")
-    fun getLocalAddress(): String {
-        return bluetoothAdapter?.address ?: ""
-    }
-
-    /**
-     * 将本地设备设为可被其他设备检测到.
-     * 应用可以设置的最大持续时间为 3600 秒，值为 0 则表示设备始终可检测到。
-     * 任何小于 0 或大于 3600 的值都会自动设为 120 秒。
-     */
-    fun settingDiscoverable(requestCode: Int, time: Int? = 120) {
-        val intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
-        intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, time ?: 120)
-        ActivityCompat.startActivityForResult(activity, intent, requestCode, null)
-    }
-
-    /**
-     * 可检测模式
-     */
-    fun getScanModel(): String {
-        return getScanModel(bluetoothAdapter?.scanMode)
-    }
-
-    /**
-     * 可检测模式
-     */
-    fun getScanModel(scanMode: Int?): String {
-        return when (scanMode) {
-            BluetoothAdapter.SCAN_MODE_NONE -> {
-                "未处于可检测到模式并且无法接收连接"
-            }
-            BluetoothAdapter.SCAN_MODE_CONNECTABLE -> {
-                "未处于可检测到模式但仍能接收连接"
-            }
-            BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE -> {
-                "设备处于可检测到模式"
-            }
-            else -> {
-                "未处于可检测到模式并且无法接收连接"
-            }
-        }
-    }
-
-    /**
-     * 连接状态
-     */
-    fun getBondState(bondState: Int): String {
-        return when (bondState) {
-            BluetoothDevice.BOND_BONDED -> {
-                "已连接"
-            }
-            BluetoothDevice.BOND_BONDING -> {
-                "正在连接"
-            }
-            BluetoothDevice.BOND_NONE -> {
-                "未连接"
-            }
-            else -> {
-                ""
-            }
-        }
-    }
-
     private var acceptThread: AcceptThread? = null
     private var connectedThread: ConnectedThread? = null
     private var connectThread: ConnectThread? = null
-    var connectBluetoothDevice: BluetoothDevice? = null
 
     /*
     要在两台设备上的应用之间创建连接，必须同时实现服务器端和客户端机制，因为其中一台设备必须开放服务器套接字，
@@ -231,7 +120,7 @@ class ClassicBluetoothHelper(private val activity: FragmentActivity,
      * 启动聊天服务。具体地说，启动AcceptThread以侦听(服务器)模式开始会话。由 Activity onResume()调用
      */
     @Synchronized
-    fun start() {
+    override fun start() {
         // 取消完成连接的线程
         if (connectThread != null) {
             connectThread?.cancel()
@@ -253,7 +142,7 @@ class ClassicBluetoothHelper(private val activity: FragmentActivity,
     /**
      * 以非同步的方式写入已连接线程
      */
-    fun write(byteArray: ByteArray) {
+    override fun write(byteArray: ByteArray) {
         // 同步已连接线程的副本
         val connectedThread = synchronized(this) {
             if (state != STATE_CONNECTED) return
@@ -267,7 +156,7 @@ class ClassicBluetoothHelper(private val activity: FragmentActivity,
      * 启动ConnectThread启动到远程设备的连接。
      */
     @Synchronized
-    fun connect(bluetoothDevice: BluetoothDevice) {
+    override fun connect(bluetoothDevice: BluetoothDevice) {
         // 取消任何试图建立连接的线程
         if (state == STATE_CONNECTING) {
             if (connectThread != null) {
@@ -524,29 +413,6 @@ class ClassicBluetoothHelper(private val activity: FragmentActivity,
                 e.printStackTrace()
             }
         }
-    }
-
-    companion object {
-
-        /*
-         * 表示当前连接状态的常量
-         */
-        const val STATE_NONE = 0       // 我们什么都不做
-        const val STATE_LISTEN = 1     // 现在监听传入连接
-        const val STATE_CONNECTING = 2 // 现在启动一个传出连接
-        const val STATE_CONNECTED = 3  // 现在连接到远程设备
-
-        /*
-         * 连接状态的常量
-         */
-        /**
-         * 指示连接已丢失
-         */
-        const val CONNECTION_STATE_LOST = 10
-        /**
-         * 指示连接尝试失败
-         */
-        const val CONNECTION_STATE_FAIL = 11
     }
 
 }

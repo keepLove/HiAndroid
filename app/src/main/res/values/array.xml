@@ -28,6 +28,11 @@
         <item>EventBus</item>
     </string-array>
 
+    <string-array name="bluetooth_list">
+        <item>Classic Bluetooth (经典蓝牙)</item>
+        <item>Bluetooth Low Energy (BLE，低功耗蓝牙)</item>
+    </string-array>
+
     <string-array name="patterns_list">
         <item>Factory Pattern(工厂模式)</item>
         <item>Abstract Factory Pattern(抽象工厂模式)</item>

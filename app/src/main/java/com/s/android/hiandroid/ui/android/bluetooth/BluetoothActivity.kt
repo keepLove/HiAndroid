@@ -23,8 +23,12 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
 
     private var recyclerAdapter: BluetoothRecyclerAdapter? = null
     private var boundDeviceRecyclerAdapter: BluetoothRecyclerAdapter? = null
-    private val classicBluetoothHelper: ClassicBluetoothHelper by lazy {
-        ClassicBluetoothHelper(this, this)
+    private val bluetoothHelper: BluetoothImpl by lazy {
+        if (intent.getStringExtra("type") == "classic bluetooth") {
+            ClassicBluetoothHelper(this, this)
+        } else {
+            BLEHelper(this, this)
+        }
     }
     private val stringBuffer = StringBuffer()
 
@@ -34,18 +38,18 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
 
     @SuppressLint("HardwareIds")
     override fun init(savedInstanceState: Bundle?) {
-        if (!classicBluetoothHelper.isBluetooth()) {
+        if (!bluetoothHelper.isBluetooth()) {
             showToastAndLog("该设备不支持蓝牙")
             finish()
         }
         tv_discovery.setOnClickListener {
             showToastAndLog("开始搜索")
-            classicBluetoothHelper.startDiscovery()
+            bluetoothHelper.startDiscovery()
         }
         tv_time_title.setOnClickListener {
-            classicBluetoothHelper.settingDiscoverable(1002, et_time.text.toString().toIntOrNull())
+            bluetoothHelper.settingDiscoverable(1002, et_time.text.toString().toIntOrNull())
         }
-        tv_scan_mode.text = classicBluetoothHelper.getScanModel()
+        tv_scan_mode.text = bluetoothHelper.getScanModel()
         // 已配对设备
         rv_bound_device.layoutManager = LinearLayoutManager(this)
         boundDeviceRecyclerAdapter = BluetoothRecyclerAdapter()
@@ -58,7 +62,7 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
         bt_send.setOnClickListener {
             val message = et_message.text.toString()
             if (message.isNotEmpty()) {
-                classicBluetoothHelper.write(message.toByteArray())
+                bluetoothHelper.write(message.toByteArray())
                 setMessage("Me: $message")
                 et_message.text = null
             }
@@ -68,10 +72,10 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
     override fun onResume() {
         super.onResume()
         //判断是否打开蓝牙
-        if (classicBluetoothHelper.isEnabled()) {
+        if (bluetoothHelper.isEnabled()) {
             getLocalBluetooth()
         } else {
-            classicBluetoothHelper.enable(1001)
+            bluetoothHelper.enable(1001)
         }
     }
 
@@ -81,14 +85,14 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
             setOnItemClickListener { _, _, position ->
                 val item = getItem(position)
                 showToastAndLog("name:${item?.name}")
-                classicBluetoothHelper.connect(item!!)
+                bluetoothHelper.connect(item!!)
             }
         }
 
         override fun convert(helper: BaseViewHolder, item: BluetoothDevice) {
             helper.setText(R.id.tv_name, item.name)
                     .setText(R.id.tv_address, item.address)
-                    .setText(R.id.tv_bound, classicBluetoothHelper.getBondState(item.bondState))
+                    .setText(R.id.tv_bound, bluetoothHelper.getBondState(item.bondState))
         }
     }
 
@@ -97,13 +101,13 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
      */
     @SuppressLint("HardwareIds")
     private fun getLocalBluetooth() {
-        if (classicBluetoothHelper.isEnabled()) {
+        if (bluetoothHelper.isEnabled()) {
             //获取本地蓝牙名称
-            tv_name.text = classicBluetoothHelper.getLocalName()
+            tv_name.text = bluetoothHelper.getLocalName()
             //获取本地蓝牙地址
-            tv_address.text = classicBluetoothHelper.getLocalAddress()
-            if (classicBluetoothHelper.state == ClassicBluetoothHelper.STATE_NONE) {
-                classicBluetoothHelper.start()
+            tv_address.text = bluetoothHelper.getLocalAddress()
+            if (bluetoothHelper.state == BluetoothImpl.STATE_NONE) {
+                bluetoothHelper.start()
             }
             this@BluetoothActivity.getBondedDevices()
         }
@@ -111,14 +115,14 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        classicBluetoothHelper.onDestroy()
+        bluetoothHelper.onDestroy()
     }
 
     /**
      * 获取已经配对的设备
      */
     private fun getBondedDevices() {
-        classicBluetoothHelper.getBondedDevices()?.forEach { bluetoothDevice ->
+        bluetoothHelper.getBondedDevices()?.forEach { bluetoothDevice ->
             boundDeviceRecyclerAdapter?.apply {
                 // 避免重复
                 var contain = -1
@@ -163,31 +167,31 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
 
     override fun scanModeChanged(scanMode: Int) {
         showToastAndLog("scanMode:$scanMode")
-        tv_scan_mode.text = classicBluetoothHelper.getScanModel(scanMode)
+        tv_scan_mode.text = bluetoothHelper.getScanModel(scanMode)
     }
 
     override fun readMessage(byteArray: ByteArray, size: Int) {
         val message = String(byteArray, 0, size)
         logD("read message: number:$size   string:$message")
-        setMessage("${classicBluetoothHelper.connectBluetoothDevice?.name} : $message")
+        setMessage("${bluetoothHelper.connectBluetoothDevice?.name} : $message")
     }
 
     override fun connectionStateChange(state: Int) {
         when (state) {
-            ClassicBluetoothHelper.STATE_NONE,
-            ClassicBluetoothHelper.STATE_LISTEN -> {
+            BluetoothImpl.STATE_NONE,
+            BluetoothImpl.STATE_LISTEN -> {
                 setMessage("state : 未连接")
             }
-            ClassicBluetoothHelper.STATE_CONNECTING -> {
+            BluetoothImpl.STATE_CONNECTING -> {
                 setMessage("state : 连接中")
             }
-            ClassicBluetoothHelper.STATE_CONNECTED -> {
-                setMessage("state : 连接成功 : ${classicBluetoothHelper.connectBluetoothDevice?.name}")
+            BluetoothImpl.STATE_CONNECTED -> {
+                setMessage("state : 连接成功 : ${bluetoothHelper.connectBluetoothDevice?.name}")
             }
-            ClassicBluetoothHelper.CONNECTION_STATE_LOST -> {
+            BluetoothImpl.CONNECTION_STATE_LOST -> {
                 showToastAndLog("设备连接丢失")
             }
-            ClassicBluetoothHelper.CONNECTION_STATE_FAIL -> {
+            BluetoothImpl.CONNECTION_STATE_FAIL -> {
                 showToastAndLog("无法连接设备")
             }
             else -> {
