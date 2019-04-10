@@ -17,12 +17,12 @@ class BluetoothListActivity : BaseStringListActivity() {
         when (position) {
             0 -> {
                 startActivity(Intent(this, BluetoothActivity::class.java).apply {
-                    putExtra("type", "classic bluetooth")
+                    putExtra("type", "Classic Bluetooth")
                 })
             }
             1 -> {
                 startActivity(Intent(this, BluetoothActivity::class.java).apply {
-                    putExtra("type", "bluetooth low energy")
+                    putExtra("type", "Bluetooth Low Energy")
                 })
             }
         }

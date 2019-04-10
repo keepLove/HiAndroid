@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.android.bluetooth.BluetoothActivity">
 
     <include
@@ -12,142 +13,168 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/tv_name_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_10"
-        android:text="蓝牙名称："
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="11222"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toRightOf="@id/tv_name_title"
-        app:layout_constraintTop_toTopOf="@id/tv_name_title" />
-
-    <TextView
-        android:id="@+id/tv_address_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_20"
-        android:text="蓝牙地址："
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toRightOf="@id/tv_name"
-        app:layout_constraintTop_toTopOf="@id/tv_name" />
-
-    <TextView
-        android:id="@+id/tv_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="11222"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toRightOf="@id/tv_address_title"
-        app:layout_constraintTop_toTopOf="@id/tv_address_title" />
-
-    <TextView
-        android:id="@+id/tv_scan_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
-        android:text="当前模式"
-        app:layout_constraintLeft_toLeftOf="@id/tv_name_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_name_title" />
-
-    <Button
-        android:id="@+id/tv_time_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
-        android:text="设置可检测时间"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="@id/tv_name_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_scan_mode" />
-
-    <EditText
-        android:id="@+id/et_time"
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:inputType="number"
-        android:text="120"
-        app:layout_constraintBottom_toBottomOf="@id/tv_time_title"
-        app:layout_constraintLeft_toRightOf="@id/tv_time_title"
-        app:layout_constraintTop_toTopOf="@id/tv_time_title" />
-
     <ScrollView
-        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_time_title">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            tools:context=".ui.android.bluetooth.BluetoothActivity">
 
             <TextView
-                android:id="@+id/tv_message"
+                android:id="@+id/tv_name_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:text="蓝牙名称："
+                android:textColor="@color/black"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11222"
+                android:textColor="@color/black"
+                app:layout_constraintLeft_toRightOf="@id/tv_name_title"
+                app:layout_constraintTop_toTopOf="@id/tv_name_title" />
+
+            <TextView
+                android:id="@+id/tv_address_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:text="蓝牙地址："
+                android:textColor="@color/black"
+                app:layout_constraintLeft_toRightOf="@id/tv_name"
+                app:layout_constraintTop_toTopOf="@id/tv_name" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11222"
+                android:textColor="@color/black"
+                app:layout_constraintLeft_toRightOf="@id/tv_address_title"
+                app:layout_constraintTop_toTopOf="@id/tv_address_title" />
+
+            <TextView
+                android:id="@+id/tv_scan_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="当前模式"
+                app:layout_constraintLeft_toLeftOf="@id/tv_name_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_name_title" />
+
+            <Button
+                android:id="@+id/tv_time_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="设置可检测时间"
+                android:textColor="@color/black"
+                app:layout_constraintLeft_toLeftOf="@id/tv_name_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_scan_mode" />
+
+            <EditText
+                android:id="@+id/et_time"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:inputType="number"
+                android:text="120"
+                app:layout_constraintBottom_toBottomOf="@id/tv_time_title"
+                app:layout_constraintLeft_toRightOf="@id/tv_time_title"
+                app:layout_constraintTop_toTopOf="@id/tv_time_title" />
+
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_time_title">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="message"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+            </ScrollView>
+
+            <Button
+                android:id="@+id/bt_send"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="发送"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/scrollView" />
+
+            <EditText
+                android:id="@+id/et_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/bt_send"
+                app:layout_constraintTop_toTopOf="@id/bt_send" />
+
+            <TextView
+                android:id="@+id/tv_bound_device_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="已配对设备"
+                android:textColor="@color/black"
+                app:layout_constraintLeft_toLeftOf="@id/tv_time_title"
+                app:layout_constraintTop_toBottomOf="@id/bt_send" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_bound_device"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="message"
-                android:textColor="@color/black" />
+                android:layout_margin="@dimen/dp_10"
+                app:layout_constraintTop_toBottomOf="@id/tv_bound_device_title" />
 
-        </LinearLayout>
+            <Button
+                android:id="@+id/tv_discovery"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center"
+                android:text="搜索设备"
+                android:textColor="@color/black"
+                app:layout_constraintLeft_toLeftOf="@id/tv_name_title"
+                app:layout_constraintTop_toBottomOf="@id/rv_bound_device" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_discovery" />
+
+            <Button
+                android:id="@+id/tv_characteristic"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center"
+                android:text="characteristic"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@id/recycler_view" />
+
+            <ExpandableListView
+                android:id="@+id/gatt_services_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_characteristic" />
+        </android.support.constraint.ConstraintLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/bt_send"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="发送"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scrollView" />
-
-    <EditText
-        android:id="@+id/et_message"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/bt_send"
-        app:layout_constraintTop_toTopOf="@id/bt_send" />
-
-    <TextView
-        android:id="@+id/tv_bound_device_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
-        android:text="已配对设备"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="@id/tv_time_title"
-        app:layout_constraintTop_toBottomOf="@id/bt_send" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_bound_device"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_10"
-        app:layout_constraintTop_toBottomOf="@id/tv_bound_device_title" />
-
-    <Button
-        android:id="@+id/tv_discovery"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
-        android:layout_marginTop="@dimen/dp_10"
-        android:gravity="center"
-        android:text="搜索设备"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="@id/tv_name_title"
-        app:layout_constraintTop_toBottomOf="@id/rv_bound_device" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_discovery" />
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

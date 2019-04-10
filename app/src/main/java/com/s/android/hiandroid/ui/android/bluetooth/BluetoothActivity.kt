@@ -3,9 +3,13 @@ package com.s.android.hiandroid.ui.android.bluetooth
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattService
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.widget.ExpandableListAdapter
+import android.widget.SimpleExpandableListAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.s.android.hiandroid.R
 import com.s.android.hiandroid.common.BaseRecyclerAdapter
@@ -13,6 +17,7 @@ import com.s.android.hiandroid.common.utils.logD
 import com.s.android.hiandroid.common.utils.showToastAndLog
 import com.s.android.hiandroid.ui.common.BaseActivity
 import kotlinx.android.synthetic.main.activity_bluetooth.*
+import java.util.*
 
 
 /**
@@ -24,13 +29,18 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
     private var recyclerAdapter: BluetoothRecyclerAdapter? = null
     private var boundDeviceRecyclerAdapter: BluetoothRecyclerAdapter? = null
     private val bluetoothHelper: BluetoothImpl by lazy {
-        if (intent.getStringExtra("type") == "classic bluetooth") {
+        if (bluetoothType == "Classic Bluetooth") {
             ClassicBluetoothHelper(this, this)
         } else {
             BLEHelper(this, this)
         }
     }
     private val stringBuffer = StringBuffer()
+    private val bluetoothType: String by lazy {
+        val type = intent.getStringExtra("type")
+        type ?: "Classic Bluetooth"
+    }
+    private var mNotifyCharacteristic: BluetoothGattCharacteristic? = null
 
     override fun getLayoutResID(): Int? {
         return R.layout.activity_bluetooth
@@ -38,6 +48,7 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
 
     @SuppressLint("HardwareIds")
     override fun init(savedInstanceState: Bundle?) {
+        supportActionBar?.title = bluetoothType
         if (!bluetoothHelper.isBluetooth()) {
             showToastAndLog("该设备不支持蓝牙")
             finish()
@@ -66,6 +77,29 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
                 setMessage("Me: $message")
                 et_message.text = null
             }
+        }
+        gatt_services_list.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
+            if (mGattCharacteristics.isNotEmpty()) {
+                val characteristic = mGattCharacteristics[groupPosition][childPosition]
+                val charaProp = characteristic.properties
+                if (charaProp or BluetoothGattCharacteristic.PROPERTY_READ > 0) {
+                    // If there is an active notification on a characteristic, clear
+                    // it first so it doesn't update the data field on the user interface.
+                    if (mNotifyCharacteristic != null) {
+                        bluetoothHelper.setCharacteristicNotification(
+                                mNotifyCharacteristic!!, false)
+                        mNotifyCharacteristic = null
+                    }
+                    bluetoothHelper.readCharacteristic(characteristic)
+                }
+                if (charaProp or BluetoothGattCharacteristic.PROPERTY_NOTIFY > 0) {
+                    mNotifyCharacteristic = characteristic
+                    bluetoothHelper.setCharacteristicNotification(
+                            characteristic, true)
+                }
+                return@setOnChildClickListener true
+            }
+            return@setOnChildClickListener false
         }
     }
 
@@ -106,7 +140,7 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
             tv_name.text = bluetoothHelper.getLocalName()
             //获取本地蓝牙地址
             tv_address.text = bluetoothHelper.getLocalAddress()
-            if (bluetoothHelper.state == BluetoothImpl.STATE_NONE) {
+            if (bluetoothHelper.connectionState == BluetoothImpl.STATE_NONE) {
                 bluetoothHelper.start()
             }
             this@BluetoothActivity.getBondedDevices()
@@ -166,33 +200,88 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
     }
 
     override fun scanModeChanged(scanMode: Int) {
-        showToastAndLog("scanMode:$scanMode")
+        showToastAndLog("scanMode:${bluetoothHelper.getScanModel(scanMode)}")
         tv_scan_mode.text = bluetoothHelper.getScanModel(scanMode)
     }
 
-    override fun readMessage(byteArray: ByteArray, size: Int) {
-        val message = String(byteArray, 0, size)
-        logD("read message: number:$size   string:$message")
+    override fun readMessage(message: String) {
+        logD("read message: number:   string:$message")
         setMessage("${bluetoothHelper.connectBluetoothDevice?.name} : $message")
+    }
+
+    private val listName = "NAME"
+    private val listUuid = "UUID"
+    private var mGattCharacteristics: ArrayList<ArrayList<BluetoothGattCharacteristic>> = ArrayList()
+
+    override fun onServicesDiscovered(gattServices: List<BluetoothGattService>?) {
+        if (gattServices == null) return
+        var uuid: String?
+        val unknownServiceString = "unknown_service"
+        val unknownCharaString = "unknown_characteristic"
+        val gattServiceData = ArrayList<HashMap<String, String>>()
+        val gattCharacteristicData = ArrayList<ArrayList<HashMap<String, String>>>()
+        mGattCharacteristics = ArrayList()
+
+        // Loops through available GATT Services.
+        for (gattService in gattServices) {
+            val currentServiceData = HashMap<String, String>()
+            uuid = gattService.uuid.toString()
+            currentServiceData[listName] = SampleGattAttributes.lookup(uuid, unknownServiceString)
+            currentServiceData[listUuid] = uuid
+            gattServiceData.add(currentServiceData)
+
+            val gattCharacteristicGroupData = ArrayList<HashMap<String, String>>()
+            val gattCharacteristics = gattService.characteristics
+            val charas = ArrayList<BluetoothGattCharacteristic>()
+
+            // Loops through available Characteristics.
+            for (gattCharacteristic in gattCharacteristics) {
+                charas.add(gattCharacteristic)
+                val currentCharaData = HashMap<String, String>()
+                uuid = gattCharacteristic.uuid.toString()
+                currentCharaData[listName] = SampleGattAttributes.lookup(uuid, unknownCharaString)
+                currentCharaData[listUuid] = uuid
+                gattCharacteristicGroupData.add(currentCharaData)
+            }
+            mGattCharacteristics.add(charas)
+            gattCharacteristicData.add(gattCharacteristicGroupData)
+        }
+
+        val gattServiceAdapter = SimpleExpandableListAdapter(
+                this,
+                gattServiceData,
+                android.R.layout.simple_expandable_list_item_2,
+                arrayOf(listName, listUuid),
+                intArrayOf(android.R.id.text1, android.R.id.text2),
+                gattCharacteristicData,
+                android.R.layout.simple_expandable_list_item_2,
+                arrayOf(listName, listUuid),
+                intArrayOf(android.R.id.text1, android.R.id.text2)
+        )
+        gatt_services_list.setAdapter(gattServiceAdapter)
     }
 
     override fun connectionStateChange(state: Int) {
         when (state) {
             BluetoothImpl.STATE_NONE,
             BluetoothImpl.STATE_LISTEN -> {
-                setMessage("state : 未连接")
+                setMessage("connectionState : 未连接")
             }
             BluetoothImpl.STATE_CONNECTING -> {
-                setMessage("state : 连接中")
+                setMessage("connectionState : 连接中")
             }
             BluetoothImpl.STATE_CONNECTED -> {
-                setMessage("state : 连接成功 : ${bluetoothHelper.connectBluetoothDevice?.name}")
+                setMessage("connectionState : 连接成功 : ${bluetoothHelper.connectBluetoothDevice?.name}")
+            }
+            BluetoothImpl.STATE_DISCONNECTED -> {
+                setMessage("connectionState : 设备断开连接")
+                gatt_services_list.setAdapter(null as ExpandableListAdapter?)
             }
             BluetoothImpl.CONNECTION_STATE_LOST -> {
-                showToastAndLog("设备连接丢失")
+                setMessage("设备连接丢失")
             }
             BluetoothImpl.CONNECTION_STATE_FAIL -> {
-                showToastAndLog("无法连接设备")
+                setMessage("无法连接设备")
             }
             else -> {
             }

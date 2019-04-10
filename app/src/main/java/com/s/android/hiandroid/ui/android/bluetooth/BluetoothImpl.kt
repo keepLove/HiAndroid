@@ -3,11 +3,38 @@ package com.s.android.hiandroid.ui.android.bluetooth
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattService
 import android.content.Intent
+import android.content.IntentFilter
+import android.support.annotation.CallSuper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
+import java.util.*
 
 abstract class BluetoothImpl(protected val activity: FragmentActivity, protected val bluetoothListener: BluetoothListener) {
+
+    /**
+     * 蓝牙广播
+     */
+    private val bluetoothReceiver: BluetoothReceiver
+
+    init {
+        bluetoothReceiver = BluetoothReceiver(bluetoothListener)
+        registerReceiver()
+    }
+
+    /**
+     * 注册蓝牙广播
+     */
+    private fun registerReceiver() {
+        // 找到设备的广播
+        activity.registerReceiver(bluetoothReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
+        // 搜索完成的广播
+        activity.registerReceiver(bluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
+        // 可检测到模式发生变化时收到通知
+        activity.registerReceiver(bluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED))
+    }
 
     /**
      * 本地设备蓝牙适配器
@@ -20,7 +47,13 @@ abstract class BluetoothImpl(protected val activity: FragmentActivity, protected
     /**
      * 连接状态
      */
-    var state: Int = STATE_NONE
+    var connectionState: Int = STATE_NONE
+        set(value) {
+            field = value
+            activity.runOnUiThread {
+                bluetoothListener.connectionStateChange(value)
+            }
+        }
 
     /**
      * 是否支持蓝牙
@@ -53,9 +86,34 @@ abstract class BluetoothImpl(protected val activity: FragmentActivity, protected
     abstract fun connect(bluetoothDevice: BluetoothDevice)
 
     /**
+     * 断开连接
+     */
+    abstract fun disconnect()
+
+    /**
      * 销毁时取消连接
      */
-    abstract fun onDestroy()
+    @CallSuper
+    open fun onDestroy() {
+        // 取消注册广播
+        activity.unregisterReceiver(bluetoothReceiver)
+    }
+
+    /**
+     * 启用或禁用对给定特性的通知。
+     */
+    open fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic,
+                                           enabled: Boolean) {
+    }
+
+    /**
+     * Request a read on a given {@code BluetoothGattCharacteristic}. The read result is reported
+     * asynchronously through the {@code BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
+     * callback.
+     *
+     * @param characteristic The characteristic to read from.
+     */
+    open fun readCharacteristic(characteristic: BluetoothGattCharacteristic) {}
 
     /**
      * 将本地设备设为可被其他设备检测到.
@@ -163,6 +221,7 @@ abstract class BluetoothImpl(protected val activity: FragmentActivity, protected
         const val STATE_LISTEN = 1     // 现在监听传入连接
         const val STATE_CONNECTING = 2 // 现在启动一个传出连接
         const val STATE_CONNECTED = 3  // 现在连接到远程设备
+        const val STATE_DISCONNECTED = 4  // 设备断开连接
 
         /*
          * 连接状态的常量
@@ -200,10 +259,36 @@ interface BluetoothListener {
     /**
      * 读取到的消息
      */
-    fun readMessage(byteArray: ByteArray, size: Int)
+    fun readMessage(message: String)
 
     /**
      * 连接状态改变
      */
     fun connectionStateChange(state: Int)
+
+    /**
+     * 搜索服务器完成
+     */
+    fun onServicesDiscovered(gattServices: List<BluetoothGattService>?)
+}
+
+object SampleGattAttributes {
+
+    private val attributes = HashMap<String, String>()
+    const val HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb"
+    const val CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb"
+
+    init {
+        // Sample Services.
+        attributes.put("0000180d-0000-1000-8000-00805f9b34fb", "Heart Rate Service");
+        attributes.put("0000180a-0000-1000-8000-00805f9b34fb", "Device Information Service");
+        // Sample Characteristics.
+        attributes.put(HEART_RATE_MEASUREMENT, "Heart Rate Measurement");
+        attributes.put("00002a29-0000-1000-8000-00805f9b34fb", "Manufacturer Name String");
+    }
+
+    fun lookup(uuid: String, defaultName: String): String {
+        val name = attributes[uuid]
+        return name ?: defaultName
+    }
 }

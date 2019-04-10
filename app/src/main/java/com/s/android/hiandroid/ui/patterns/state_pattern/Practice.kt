@@ -15,7 +15,7 @@ interface State {
 class StartState : State {
 
     override fun doAction(context: Context) {
-        println("Player is in start state")
+        println("Player is in start connectionState")
         context.state = this
     }
 
@@ -27,7 +27,7 @@ class StartState : State {
 class StopState : State {
 
     override fun doAction(context: Context) {
-        println("Player is in stop state")
+        println("Player is in stop connectionState")
         context.state = this
     }
 

@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
-import android.content.IntentFilter
 import android.support.v4.app.FragmentActivity
 import java.io.InputStream
 import java.io.OutputStream
@@ -16,17 +15,8 @@ import java.util.*
 class ClassicBluetoothHelper(activity: FragmentActivity,
                              bluetoothListener: BluetoothListener) : BluetoothImpl(activity, bluetoothListener) {
 
-    /**
-     * 蓝牙广播
-     */
-    private val bluetoothReceiver: BluetoothReceiver
-
     init {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        bluetoothReceiver = BluetoothReceiver(bluetoothListener)
-        if (isBluetooth()) {
-            registerReceiver()
-        }
     }
 
     /**
@@ -37,40 +27,11 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
     }
 
     /**
-     * 注册蓝牙广播
-     */
-    private fun registerReceiver() {
-        // 找到设备的广播
-        activity.registerReceiver(bluetoothReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-        // 搜索完成的广播
-        activity.registerReceiver(bluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
-        // 可检测到模式发生变化时收到通知
-        activity.registerReceiver(bluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED))
-    }
-
-    /**
      * 销毁时取消连接
      */
     override fun onDestroy() {
-        // 取消注册广播
-        activity.unregisterReceiver(bluetoothReceiver)
-        // 取消完成连接的线程
-        if (connectThread != null) {
-            connectThread?.cancel()
-            connectThread = null
-        }
-        // 取消当前正在运行连接的任何线程
-        if (connectedThread != null) {
-            connectedThread?.cancel()
-            connectedThread = null
-        }
-        // 取消accept线程，因为我们只想连接到一个设备
-        if (acceptThread != null) {
-            acceptThread?.cancel()
-            acceptThread = null
-        }
-        state = STATE_NONE
-        bluetoothListener.connectionStateChange(this@ClassicBluetoothHelper.state)
+        super.onDestroy()
+        disconnect()
     }
 
     /**
@@ -136,7 +97,7 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
             acceptThread = AcceptThread()
             acceptThread?.start()
         }
-        bluetoothListener.connectionStateChange(this@ClassicBluetoothHelper.state)
+        connectionState = STATE_NONE
     }
 
     /**
@@ -145,7 +106,7 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
     override fun write(byteArray: ByteArray) {
         // 同步已连接线程的副本
         val connectedThread = synchronized(this) {
-            if (state != STATE_CONNECTED) return
+            if (connectionState != STATE_CONNECTED) return
             connectedThread
         }
         // 执行非同步写入
@@ -158,7 +119,7 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
     @Synchronized
     override fun connect(bluetoothDevice: BluetoothDevice) {
         // 取消任何试图建立连接的线程
-        if (state == STATE_CONNECTING) {
+        if (connectionState == STATE_CONNECTING) {
             if (connectThread != null) {
                 connectThread?.cancel()
                 connectThread = null
@@ -172,7 +133,26 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
         // 启动线程来连接给定的设备
         connectThread = ConnectThread(bluetoothDevice)
         connectThread?.start()
-        bluetoothListener.connectionStateChange(this@ClassicBluetoothHelper.state)
+        bluetoothListener.connectionStateChange(this@ClassicBluetoothHelper.connectionState)
+    }
+
+    override fun disconnect() {
+        // 取消完成连接的线程
+        if (connectThread != null) {
+            connectThread?.cancel()
+            connectThread = null
+        }
+        // 取消当前正在运行连接的任何线程
+        if (connectedThread != null) {
+            connectedThread?.cancel()
+            connectedThread = null
+        }
+        // 取消accept线程，因为我们只想连接到一个设备
+        if (acceptThread != null) {
+            acceptThread?.cancel()
+            acceptThread = null
+        }
+        connectionState = STATE_NONE
     }
 
     /**
@@ -199,18 +179,14 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
         connectedThread = ConnectedThread(bluetoothSocket)
         connectedThread?.start()
         connectBluetoothDevice = bluetoothDevice
-        bluetoothListener.connectionStateChange(this@ClassicBluetoothHelper.state)
     }
 
     /**
      * 指示连接已丢失，并通知UI Activity。
      */
     private fun connectionLost() {
-        activity.runOnUiThread {
-            bluetoothListener.connectionStateChange(CONNECTION_STATE_LOST)
-        }
-        state = STATE_NONE
-        bluetoothListener.connectionStateChange(this@ClassicBluetoothHelper.state)
+        bluetoothListener.connectionStateChange(CONNECTION_STATE_LOST)
+        connectionState = STATE_NONE
         // 重新启动服务以重新启动监听模式
         start()
     }
@@ -219,11 +195,8 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
      * 指示连接尝试失败，并通知UI活动。
      */
     private fun connectionFailed() {
-        activity.runOnUiThread {
-            bluetoothListener.connectionStateChange(CONNECTION_STATE_FAIL)
-        }
-        state = STATE_NONE
-        bluetoothListener.connectionStateChange(this@ClassicBluetoothHelper.state)
+        bluetoothListener.connectionStateChange(CONNECTION_STATE_FAIL)
+        connectionState = STATE_NONE
         // 重新启动服务以重新启动监听模式
         start()
     }
@@ -247,12 +220,12 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
                 bluetoothAdapter?.listenUsingRfcommWithServiceRecord("BluetoothChatSecure", uuid)
 
         init {
-            this@ClassicBluetoothHelper.state = STATE_LISTEN
+            this@ClassicBluetoothHelper.connectionState = STATE_LISTEN
         }
 
         override fun run() {
             var bluetoothSocket: BluetoothSocket?
-            while (this@ClassicBluetoothHelper.state != STATE_CONNECTED) {
+            while (this@ClassicBluetoothHelper.connectionState != STATE_CONNECTED) {
                 try {
                     // 开始侦听连接请求。
                     // 这是一个阻塞调用。它将在连接被接受或发生异常时返回。 仅当远程设备发送的连接请求中所包含的
@@ -265,7 +238,7 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
                 }
                 bluetoothSocket?.let {
                     synchronized(ClassicBluetoothHelper::class.java) {
-                        when (this@ClassicBluetoothHelper.state) {
+                        when (this@ClassicBluetoothHelper.connectionState) {
                             STATE_CONNECTING,
                             STATE_LISTEN -> {
                                 // 情况正常。启动连接的线程。
@@ -292,7 +265,7 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
             try {
                 // 这将释放服务器套接字及其所有资源，但不会关闭 accept() 所返回的已连接的 BluetoothSocket。
                 // 与 TCP/IP 不同，RFCOMM 一次只允许每个通道有一个已连接的客户端，
-                // 因此大多数情况下，在接受已连接的套接字后立即在 BluetoothServerSocket 上调用 close() 是行得通的。
+                // 因此大多数情况下，在接受已连接的套接字后立即在 BluetoothServerSocket 上调用 closeGatt() 是行得通的。
                 bluetoothServerSocket?.close()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -316,19 +289,19 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            this@ClassicBluetoothHelper.state = STATE_CONNECTED
+            this@ClassicBluetoothHelper.connectionState = STATE_CONNECTED
         }
 
         override fun run() {
             val buffer = ByteArray(1024)
             var bytes: Int
             // 连接时继续监听InputStream
-            while (this@ClassicBluetoothHelper.state == STATE_CONNECTED) {
+            while (this@ClassicBluetoothHelper.connectionState == STATE_CONNECTED) {
                 try {
                     // 从InputStream中读取
                     bytes = inputStream?.read(buffer) ?: 0
                     activity.runOnUiThread {
-                        bluetoothListener.readMessage(buffer, bytes)
+                        bluetoothListener.readMessage(String(buffer, 0, bytes))
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -378,7 +351,7 @@ class ClassicBluetoothHelper(activity: FragmentActivity,
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            this@ClassicBluetoothHelper.state = STATE_CONNECTING
+            this@ClassicBluetoothHelper.connectionState = STATE_CONNECTING
         }
 
         override fun run() {

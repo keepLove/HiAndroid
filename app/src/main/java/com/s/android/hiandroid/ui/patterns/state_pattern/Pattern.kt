@@ -32,10 +32,10 @@ object StatePattern {
     val practice = """
 
 class Context {
-    var state: State? = null
+    var connectionState: State? = null
 
     init {
-        state = null
+        connectionState = null
     }
 }
 
@@ -46,8 +46,8 @@ interface State {
 class StartState : State {
 
     override fun doAction(context: Context) {
-        println("Player is in start state")
-        context.state = this
+        println("Player is in start connectionState")
+        context.connectionState = this
     }
 
     override fun toString(): String {
@@ -58,8 +58,8 @@ class StartState : State {
 class StopState : State {
 
     override fun doAction(context: Context) {
-        println("Player is in stop state")
-        context.state = this
+        println("Player is in stop connectionState")
+        context.connectionState = this
     }
 
     override fun toString(): String {
@@ -75,12 +75,12 @@ object StatePatternDemo {
         val startState = StartState()
         startState.doAction(context)
 
-        println(context.state!!.toString())
+        println(context.connectionState!!.toString())
 
         val stopState = StopState()
         stopState.doAction(context)
 
-        println(context.state!!.toString())
+        println(context.connectionState!!.toString())
     }
 }
 

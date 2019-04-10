@@ -1,5 +1,7 @@
 package com.s.android.hiandroid.ui.android.bluetooth
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
 import android.content.pm.PackageManager
@@ -7,6 +9,8 @@ import android.os.Looper
 import android.os.Message
 import android.support.v4.app.FragmentActivity
 import com.s.android.hiandroid.common.utils.logD
+import com.tbruyelle.rxpermissions2.RxPermissions
+import java.util.*
 
 /**
  * Bluetooth low energy
@@ -50,17 +54,24 @@ class BLEHelper(activity: FragmentActivity, bluetoothListener: BluetoothListener
     }
 
     override fun start() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**
      * 扫描蓝牙设备
      * 由于蓝牙扫描的操作比较消耗手机的能量。所以我们不能一直开着蓝牙，必须设置一段时间之后关闭蓝牙扫描。
+     * 如果应用没有位置权限，蓝牙扫描功能不能使用
      */
+    @SuppressLint("CheckResult")
     override fun startDiscovery() {
-        scanning = true
-        bluetoothAdapter?.startLeScan(leScanCallback)
-        handler.sendEmptyMessageDelayed(HANDLER_WHAT_STOP_SCAN, 1000)
+        RxPermissions(activity)
+                .request(Manifest.permission.ACCESS_COARSE_LOCATION)
+                .subscribe {
+                    if (it && !scanning) {
+                        scanning = true
+                        bluetoothAdapter?.startLeScan(leScanCallback)
+                        handler.sendEmptyMessageDelayed(HANDLER_WHAT_STOP_SCAN, 5000)
+                    }
+                }
     }
 
     /**
@@ -69,70 +80,120 @@ class BLEHelper(activity: FragmentActivity, bluetoothListener: BluetoothListener
     override fun cancelDiscovery() {
         scanning = false
         bluetoothAdapter?.stopLeScan(leScanCallback)
+        bluetoothListener.discoveryFinish()
     }
 
     private var bluetoothGatt: BluetoothGatt? = null
+
+    private val gattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
+
+        override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+            if (status != BluetoothGatt.GATT_SUCCESS) {
+                // 当尝试连接失败的时候调用 disconnect 方法是不会引起这个方法回调的，所以这里
+                // 直接回调就可以了。
+                this@BLEHelper.closeGatt()
+                return
+            }
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+                // 设备已经连接
+                connectionState = STATE_CONNECTED
+                // 搜索服务器
+                bluetoothGatt?.discoverServices()
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                // 设备断开连接
+                connectionState = STATE_DISCONNECTED
+                this@BLEHelper.closeGatt()
+            }
+        }
+
+        override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                // 搜索服务器成功
+                // 在用户界面上显示所有受支持的服务和特征。
+                bluetoothListener.onServicesDiscovered(bluetoothGatt?.services)
+//                bluetoothGatt?.services?.forEach { bluetoothGattService ->
+//                    bluetoothGattService.characteristics.forEach { bluetoothGattCharacteristic ->
+//                        // 读取数据
+////                            bluetoothGatt?.readCharacteristic(bluetoothGattCharacteristic)
+//                        // 往蓝牙数据通道的写入数据
+////                            bluetoothGattCharacteristic.setValue("")
+////                            bluetoothGatt?.writeCharacteristic(bluetoothGattCharacteristic)
+//                        // 向蓝牙设备注册监听实现实时读取蓝牙设备的数据
+//                        bluetoothGatt?.setCharacteristicNotification(bluetoothGattCharacteristic, true)
+//                        bluetoothGattCharacteristic.descriptors.forEach { descriptor ->
+//                            descriptor.value = "".toByteArray()
+//                            bluetoothGatt?.writeDescriptor(descriptor)
+//                        }
+//                    }
+//                }
+            }
+        }
+
+        override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                // 读取characteristic消息
+                onCharacteristicChanged(gatt, characteristic)
+            }
+        }
+
+        override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
+            // 写入的数据是否我们需要发送的数据,如果不是按照项目的需要判断是否需要重发
+            // 执行重发策略
+            // gatt.writeCharacteristic(characteristic)
+        }
+
+        override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
+            // Characteristic notification
+            if (characteristic.uuid == UUID_HEART_RATE_MEASUREMENT) {
+                // This is special handling for the Heart Rate Measurement profile.  Data parsing is
+                // carried out as per profile specifications:
+                // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
+                val flag = characteristic.properties
+                val format: Int
+                if (flag and 0x01 != 0) {
+                    format = BluetoothGattCharacteristic.FORMAT_UINT16
+                    logD("Heart rate format UINT16.")
+                } else {
+                    format = BluetoothGattCharacteristic.FORMAT_UINT8
+                    logD("Heart rate format UINT8.")
+                }
+                val heartRate = characteristic.getIntValue(format, 1)!!
+                logD(String.format("Received heart rate: %d", heartRate))
+                bluetoothListener.readMessage(heartRate.toString())
+            } else {
+                // For all other profiles, writes the data formatted in HEX.
+                val data = characteristic.value
+                if (data != null && data.isNotEmpty()) {
+                    val stringBuilder = StringBuilder(data.size)
+                    for (byteChar in data)
+                        stringBuilder.append(String.format("%02X ", byteChar))
+                    bluetoothListener.readMessage(String(data) + "\n" + stringBuilder.toString())
+                }
+            }
+        }
+    }
+
+    override fun disconnect() {
+        bluetoothGatt?.disconnect()
+    }
 
     /**
      * 连接蓝牙设备
      */
     override fun connect(bluetoothDevice: BluetoothDevice) {
-        val gattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
-
-            override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-                if (status != BluetoothGatt.GATT_SUCCESS) {
-                    // 当尝试连接失败的时候调用 disconnect 方法是不会引起这个方法回调的，所以这里
-                    // 直接回调就可以了。
-                    gatt.close()
-                    return
-                }
-                if (newState == BluetoothProfile.STATE_CONNECTED) {
-                    // 设备已经连接
-                    // 搜索服务器
-                    bluetoothGatt?.discoverServices()
-                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    // 设备断开连接
-                    gatt.close()
-                }
+        if (scanning) {
+            cancelDiscovery()
+            handler.removeCallbacksAndMessages(null)
+        }
+        // 以前连接设备。尝试重新连接。
+        if (bluetoothDevice.address == connectBluetoothDevice?.address && bluetoothGatt != null) {
+            if (bluetoothGatt?.connect() == true) {
+                connectionState = STATE_CONNECTING
+                logD("重新连接成功 : ${bluetoothDevice.name}")
+            } else {
+                logD("重新连接失败 : ${bluetoothDevice.name}")
             }
-
-            override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
-                if (status == BluetoothGatt.GATT_SUCCESS) {
-                    // 搜索服务器成功
-                    bluetoothGatt?.services?.forEach { bluetoothGattService ->
-                        bluetoothGattService.characteristics.forEach { bluetoothGattCharacteristic ->
-                            // 读取数据
-//                            bluetoothGatt?.readCharacteristic(bluetoothGattCharacteristic)
-                            // 往蓝牙数据通道的写入数据
-//                            bluetoothGattCharacteristic.setValue("")
-//                            bluetoothGatt?.writeCharacteristic(bluetoothGattCharacteristic)
-                            // 向蓝牙设备注册监听实现实时读取蓝牙设备的数据
-                            bluetoothGatt?.setCharacteristicNotification(bluetoothGattCharacteristic, true)
-                            bluetoothGattCharacteristic.descriptors.forEach { descriptor ->
-                                descriptor.value = "".toByteArray()
-                                bluetoothGatt?.writeDescriptor(descriptor)
-                            }
-                        }
-                    }
-                }
-            }
-
-            override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
-                if (status == BluetoothGatt.GATT_SUCCESS) {
-                    // 读取characteristic消息
-                    logD("message : ${characteristic.value}")
-                }
-            }
-
-            override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
-                // 写入的数据是否我们需要发送的数据,如果不是按照项目的需要判断是否需要重发
-                // 执行重发策略
-                // gatt.writeCharacteristic(characteristic)
-            }
-
-            override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
-                // Characteristic notification
-            }
+            return
         }
         /*
          * 第二个参数表示是否需要自动连接。如果设置为 true, 表示如果设备断开了，会不断的尝试自动连接。
@@ -140,6 +201,8 @@ class BLEHelper(activity: FragmentActivity, bluetoothListener: BluetoothListener
          * 第三个参数是连接后进行的一系列操作的回调，例如连接和断开连接的回调，发现服务的回调，成功写入数据，成功读取数据的回调等等。
          */
         bluetoothGatt = bluetoothDevice.connectGatt(activity, false, gattCallback)
+        connectBluetoothDevice = bluetoothDevice
+        connectionState = STATE_CONNECTING
     }
 
     /**
@@ -154,17 +217,33 @@ class BLEHelper(activity: FragmentActivity, bluetoothListener: BluetoothListener
      * BluetoothGatt#disconnect 断开蓝牙的连接，紧接着在 BluetoothGattCallback#onConnectionStateChange
      * 执行 BluetoothGatt#close 方法释放资源。
      */
-    fun close() {
+    fun closeGatt() {
         bluetoothGatt?.close()
         bluetoothGatt = null
     }
 
     override fun write(byteArray: ByteArray) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onDestroy() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        super.onDestroy()
+        closeGatt()
+        handler.removeCallbacksAndMessages(null)
+    }
+
+    override fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic, enabled: Boolean) {
+        bluetoothGatt?.setCharacteristicNotification(characteristic, enabled)
+        // 这是专门针对心率测量的。
+        if (UUID_HEART_RATE_MEASUREMENT == characteristic.uuid) {
+            val descriptor = characteristic.getDescriptor(
+                    UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG))
+            descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+            bluetoothGatt?.writeDescriptor(descriptor)
+        }
+    }
+
+    override fun readCharacteristic(characteristic: BluetoothGattCharacteristic) {
+        bluetoothGatt?.readCharacteristic(characteristic)
     }
 
     companion object {
@@ -173,5 +252,7 @@ class BLEHelper(activity: FragmentActivity, bluetoothListener: BluetoothListener
          * 停止蓝牙扫描
          */
         const val HANDLER_WHAT_STOP_SCAN = 1001
+
+        val UUID_HEART_RATE_MEASUREMENT: UUID = UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT)
     }
 }
