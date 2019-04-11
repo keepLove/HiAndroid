@@ -1,12 +1,21 @@
-# HiAndroid
-学习安卓
+## HiAndroid
 
-1. java
+为了学习安卓的项目
+
+## download
+
+扫描二维码下载或用手机浏览器输入这个网址:  [https://fir.im/2j1x](https://fir.im/2j1x)
+
+![下载App二维码](https://github.com/keepLove/HiAndroid/blob/master/download.png)
+
+## structure
+
+*  java
 
     1. 设计模式
     2. 反射
     
-2. android
+*  android
 
     1. bus
     
@@ -16,6 +25,11 @@
 
     2. 蓝牙
 
-3. kotlin
+        1. Classic Bluetooth(经典蓝牙)
+        2. Bluetooth Low Energy(BLE,低功耗蓝牙)
+
+    3. VPN
+    
+*  kotlin
 
     1. 实现单例的方式
