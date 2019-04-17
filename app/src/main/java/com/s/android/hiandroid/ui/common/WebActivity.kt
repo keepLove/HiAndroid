@@ -15,13 +15,17 @@ class WebActivity : BaseActivity() {
 
     override fun init(savedInstanceState: Bundle?) {
         web_view.loadUrl(intent.getStringExtra("url"))
+        intent.getStringExtra("title")?.let {
+            supportActionBar?.title = it
+        }
     }
 
 }
 
-fun Context.startWebActivity(url: String) {
+fun Context.startWebActivity(url: String, title: String? = null) {
     val intent = Intent(this, WebActivity::class.java)
     intent.putExtra("url", url)
+    intent.putExtra("title", title)
     startActivity(intent)
 }
 

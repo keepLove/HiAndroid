@@ -47,9 +47,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
-        </activity>
-
-        <!-- 启动页面 -->
+        </activity> <!-- 启动页面 -->
         <activity-alias
             android:name=".launch"
             android:targetActivity=".ui.main.MainActivity">
@@ -68,11 +66,12 @@
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_VPN_SERVICE">
-
             <intent-filter>
                 <action android:name="android.net.VpnService" />
             </intent-filter>
         </service>
+
+        <activity android:name=".ui.android.thread.ThreadActivity"></activity>
     </application>
 
 </manifest>

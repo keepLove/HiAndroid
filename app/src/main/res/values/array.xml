@@ -20,6 +20,7 @@
         <item>Bus</item>
         <item>Bluetooth</item>
         <item>VPN</item>
+        <item>thread(线程)</item>
     </string-array>
 
     <string-array name="bus_list">
