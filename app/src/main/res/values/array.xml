@@ -10,6 +10,8 @@
 
     <string-array name="java_list">
         <item>reflect(反射)</item>
+        <item>thread(线程和线程池)</item>
+        <item>lock(锁)</item>
     </string-array>
 
     <string-array name="kotlin_list">
@@ -20,7 +22,6 @@
         <item>Bus</item>
         <item>Bluetooth</item>
         <item>VPN</item>
-        <item>thread(线程)</item>
     </string-array>
 
     <string-array name="bus_list">

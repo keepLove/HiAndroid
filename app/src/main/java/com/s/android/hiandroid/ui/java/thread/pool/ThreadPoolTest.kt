@@ -1,4 +1,4 @@
-package com.s.android.hiandroid.ui.android.thread.pool
+package com.s.android.hiandroid.ui.java.thread.pool
 
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors

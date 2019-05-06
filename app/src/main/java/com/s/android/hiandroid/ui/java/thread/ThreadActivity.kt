@@ -1,4 +1,4 @@
-package com.s.android.hiandroid.ui.android.thread
+package com.s.android.hiandroid.ui.java.thread
 
 import android.annotation.SuppressLint
 import android.os.Bundle

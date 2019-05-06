@@ -7,7 +7,6 @@ import com.s.android.hiandroid.R
 import com.s.android.hiandroid.common.utils.getStringArray
 import com.s.android.hiandroid.ui.android.bluetooth.BluetoothListActivity
 import com.s.android.hiandroid.ui.android.bus.BusActivity
-import com.s.android.hiandroid.ui.android.thread.ThreadActivity
 import com.s.android.hiandroid.ui.android.vpn.VPNActivity
 import com.s.android.hiandroid.ui.common.BaseStringListActivity
 
@@ -29,7 +28,6 @@ class AndroidActivity : BaseStringListActivity() {
                 startActivity(Intent(this, VPNActivity::class.java))
             }
             3 -> {
-                startActivity(Intent(this, ThreadActivity::class.java))
             }
         }
     }

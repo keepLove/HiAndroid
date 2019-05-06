@@ -6,7 +6,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.s.android.hiandroid.R
 import com.s.android.hiandroid.common.utils.getStringArray
 import com.s.android.hiandroid.ui.common.BaseStringListActivity
+import com.s.android.hiandroid.ui.java.lock.LockActivity
 import com.s.android.hiandroid.ui.java.reflect.ReflectActivity
+import com.s.android.hiandroid.ui.java.thread.ThreadActivity
 
 class JavaActivity : BaseStringListActivity() {
 
@@ -19,7 +21,11 @@ class JavaActivity : BaseStringListActivity() {
             0 -> {
                 startActivity(Intent(this, ReflectActivity::class.java))
             }
-            else -> {
+            1 -> {
+                startActivity(Intent(this, ThreadActivity::class.java))
+            }
+            2 -> {
+                startActivity(Intent(this, LockActivity::class.java))
             }
         }
     }

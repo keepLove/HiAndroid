@@ -71,7 +71,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.android.thread.ThreadActivity"></activity>
+        <activity android:name="com.s.android.hiandroid.ui.java.thread.ThreadActivity" />
+        <activity android:name="com.s.android.hiandroid.ui.java.lock.LockActivity"></activity>
     </application>
 
 </manifest>
