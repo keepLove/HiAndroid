@@ -4,14 +4,20 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import com.s.android.hiandroid.R
 import com.s.android.hiandroid.ui.common.BaseActivity
+import com.s.android.hiandroid.ui.common.OptionsMenu
 import kotlinx.android.synthetic.main.activity_lock.*
 
-/**
- * https://blog.csdn.net/mmoren/article/details/79185862
- * https://mp.weixin.qq.com/s/JPM5KxqvjQ1uEzOwlA47yA
- * https://mp.weixin.qq.com/s?__biz=MzIxNjc0ODExMA==&mid=2247483986&idx=7&sn=6b60d40ad342fa33aed971da0fc44b74&chksm=97851b73a0f29265b417085000d26bae050be00356c0d6aa836c10c5ecb46a694f0cfea73748&scene=38#wechat_redirect
- */
 class LockActivity : BaseActivity() {
+
+    override val optionsMenu: ArrayList<OptionsMenu>
+        get() = arrayListOf(
+            OptionsMenu("Synchronized", "https://mp.weixin.qq.com/s/JPM5KxqvjQ1uEzOwlA47yA"),
+            OptionsMenu(
+                "ReentrantLock",
+                "https://mp.weixin.qq.com/s?__biz=MzIxNjc0ODExMA==&mid=2247483986&idx=7&sn=6b60d40ad342fa33aed971da0fc44b74&chksm=97851b73a0f29265b417085000d26bae050be00356c0d6aa836c10c5ecb46a694f0cfea73748&scene=38#wechat_redirect"
+            ),
+            OptionsMenu("Compare And Swap", "https://blog.csdn.net/mmoren/article/details/79185862")
+        )
 
     override fun getLayoutResID(): Int? {
         return R.layout.activity_lock

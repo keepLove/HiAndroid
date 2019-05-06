@@ -2,18 +2,19 @@ package com.s.android.hiandroid.ui.java.thread
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import com.s.android.hiandroid.R
 import com.s.android.hiandroid.ui.common.BaseActivity
-import com.s.android.hiandroid.ui.common.startWebActivity
+import com.s.android.hiandroid.ui.common.OptionsMenu
 import kotlinx.android.synthetic.main.activity_thread.*
 
-/**
- * https://mp.weixin.qq.com/s/9lytCZN_xSyGVGleCMenRA
- * https://github.com/yangchong211/YCThreadPool
- */
 class ThreadActivity : BaseActivity() {
+
+    override val optionsMenu: ArrayList<OptionsMenu>
+        get() = arrayListOf(
+            OptionsMenu("线程基础", "http://www.jcodecraeer.com/plus/view.php?aid=9597"),
+            OptionsMenu("GitHub", "https://github.com/yangchong211/YCThreadPool"),
+            OptionsMenu("线程池", "https://mp.weixin.qq.com/s/9lytCZN_xSyGVGleCMenRA")
+        )
 
     override fun getLayoutResID(): Int? {
         return R.layout.activity_thread
@@ -107,22 +108,4 @@ class ThreadActivity : BaseActivity() {
             """.trimIndent()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.activity_thread, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_basic_thread -> {
-                startWebActivity("https://github.com/yangchong211/YCThreadPool", item.title.toString())
-            }
-            R.id.menu_thread_pool -> {
-                startWebActivity("https://mp.weixin.qq.com/s/9lytCZN_xSyGVGleCMenRA", item.title.toString())
-            }
-            else -> {
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 }

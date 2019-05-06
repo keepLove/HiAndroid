@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_web.*
 
 
@@ -18,6 +20,16 @@ class WebActivity : BaseActivity() {
         intent.getStringExtra("title")?.let {
             supportActionBar?.title = it
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menu.add("在浏览器打开")
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        startBrowser(web_view.originalUrl)
+        return super.onOptionsItemSelected(item)
     }
 
 }

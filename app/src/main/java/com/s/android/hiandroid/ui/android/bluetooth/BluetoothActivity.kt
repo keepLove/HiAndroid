@@ -18,12 +18,8 @@ import com.s.android.hiandroid.common.utils.showToastAndLog
 import com.s.android.hiandroid.ui.common.BaseActivity
 import kotlinx.android.synthetic.main.activity_bluetooth.*
 import java.util.*
+import kotlin.collections.ArrayList
 
-
-/**
- * https://github.com/Alex-Jerry/Android-BLE
- * https://mp.weixin.qq.com/s?__biz=MzIxNzU1Nzk3OQ==&mid=2247484750&idx=1&sn=b857c650ada19b00880d9b006296e403&chksm=97f6bbfaa08132ec3b58ab1818de3b33c63ed0787428733f17554d2e671c6175ae09565ff70b&scene=38#wechat_redirect
- */
 class BluetoothActivity : BaseActivity(), BluetoothListener {
 
     private var recyclerAdapter: BluetoothRecyclerAdapter? = null
@@ -87,7 +83,8 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
                     // it first so it doesn't update the data field on the user interface.
                     if (mNotifyCharacteristic != null) {
                         bluetoothHelper.setCharacteristicNotification(
-                                mNotifyCharacteristic!!, false)
+                            mNotifyCharacteristic!!, false
+                        )
                         mNotifyCharacteristic = null
                     }
                     bluetoothHelper.readCharacteristic(characteristic)
@@ -95,7 +92,8 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
                 if (charaProp or BluetoothGattCharacteristic.PROPERTY_NOTIFY > 0) {
                     mNotifyCharacteristic = characteristic
                     bluetoothHelper.setCharacteristicNotification(
-                            characteristic, true)
+                        characteristic, true
+                    )
                 }
                 return@setOnChildClickListener true
             }
@@ -125,8 +123,8 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
 
         override fun convert(helper: BaseViewHolder, item: BluetoothDevice) {
             helper.setText(R.id.tv_name, item.name)
-                    .setText(R.id.tv_address, item.address)
-                    .setText(R.id.tv_bound, bluetoothHelper.getBondState(item.bondState))
+                .setText(R.id.tv_address, item.address)
+                .setText(R.id.tv_bound, bluetoothHelper.getBondState(item.bondState))
         }
     }
 
@@ -248,15 +246,15 @@ class BluetoothActivity : BaseActivity(), BluetoothListener {
         }
 
         val gattServiceAdapter = SimpleExpandableListAdapter(
-                this,
-                gattServiceData,
-                android.R.layout.simple_expandable_list_item_2,
-                arrayOf(listName, listUuid),
-                intArrayOf(android.R.id.text1, android.R.id.text2),
-                gattCharacteristicData,
-                android.R.layout.simple_expandable_list_item_2,
-                arrayOf(listName, listUuid),
-                intArrayOf(android.R.id.text1, android.R.id.text2)
+            this,
+            gattServiceData,
+            android.R.layout.simple_expandable_list_item_2,
+            arrayOf(listName, listUuid),
+            intArrayOf(android.R.id.text1, android.R.id.text2),
+            gattCharacteristicData,
+            android.R.layout.simple_expandable_list_item_2,
+            arrayOf(listName, listUuid),
+            intArrayOf(android.R.id.text1, android.R.id.text2)
         )
         gatt_services_list.setAdapter(gattServiceAdapter)
     }
