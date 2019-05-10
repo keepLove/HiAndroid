@@ -1,5 +1,7 @@
 package com.s.android.hiandroid.ui.common
 
+import android.app.Dialog
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,6 +14,7 @@ import kotlinx.android.synthetic.main.layout_tool_bar.*
 abstract class BaseActivity : RxAppCompatActivity() {
 
     open val optionsMenu = arrayListOf<OptionsMenu>()
+    private val progressDialog: Dialog by lazy { ProgressDialog(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,4 +57,16 @@ abstract class BaseActivity : RxAppCompatActivity() {
     abstract fun getLayoutResID(): Int?
 
     abstract fun init(savedInstanceState: Bundle?)
+
+    protected fun showProgressDialog() {
+        if (!progressDialog.isShowing) {
+            progressDialog.show()
+        }
+    }
+
+    protected fun dismissProgressDialog() {
+        if (progressDialog.isShowing) {
+            progressDialog.dismiss()
+        }
+    }
 }

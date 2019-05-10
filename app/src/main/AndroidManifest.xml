@@ -20,6 +20,11 @@
     <!-- 在Android 6.0 及以上，还需要打开位置权限。如果应用没有位置权限，蓝牙扫描功能不能使用（其它蓝牙操作例如连接蓝牙设备和写入数据不受影响）。 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <!-- wifi -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -28,6 +33,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.android.wifi.WiFiActivity" />
         <activity
             android:name=".ui.android.bluetooth.BluetoothActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
@@ -59,8 +65,7 @@
         </activity-alias>
 
         <activity android:name=".ui.android.bluetooth.BluetoothListActivity" />
-        <activity android:name=".ui.android.vpn.VPNActivity" />
-        <!-- vpn -->
+        <activity android:name=".ui.android.vpn.VPNActivity" /> <!-- vpn -->
         <service
             android:name=".ui.android.vpn.MyVpnService"
             android:enabled="true"
@@ -71,8 +76,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name="com.s.android.hiandroid.ui.java.thread.ThreadActivity" />
-        <activity android:name="com.s.android.hiandroid.ui.java.lock.LockActivity"></activity>
+        <activity android:name=".ui.java.thread.ThreadActivity" />
+        <activity android:name=".ui.java.lock.LockActivity" />
     </application>
 
 </manifest>

@@ -22,6 +22,7 @@
         <item>Bus</item>
         <item>Bluetooth</item>
         <item>VPN</item>
+        <item>WiFi</item>
     </string-array>
 
     <string-array name="bus_list">

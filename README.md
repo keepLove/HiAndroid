@@ -14,7 +14,8 @@
 
     1. 设计模式
     2. 反射
-    3. Lock 锁
+    3. 线程和线程池
+    4. Lock 锁
     
 *  android
 
@@ -30,7 +31,7 @@
         2. Bluetooth Low Energy(BLE,低功耗蓝牙)
 
     3. VPN
-    4. thread(线程和线程池)
+    4. WiFi
     
 *  kotlin
 
