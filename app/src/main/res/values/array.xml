@@ -12,6 +12,8 @@
         <item>reflect(反射)</item>
         <item>thread(线程和线程池)</item>
         <item>lock(锁)</item>
+        <item>动态代理</item>
+        <item>枚举实现原理</item>
     </string-array>
 
     <string-array name="kotlin_list">
