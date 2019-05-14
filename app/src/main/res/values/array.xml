@@ -1,43 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="main_list">
-        <item>patterns</item>
-        <item>java</item>
-        <item>android</item>
-        <item>kotlin</item>
-    </string-array>
-
-    <string-array name="java_list">
-        <item>reflect(反射)</item>
-        <item>thread(线程和线程池)</item>
-        <item>lock(锁)</item>
-        <item>动态代理</item>
-        <item>枚举实现原理</item>
-    </string-array>
-
-    <string-array name="kotlin_list">
-        <item>kotlin实现单例的5种方式</item>
-    </string-array>
-
-    <string-array name="android_list">
-        <item>Bus</item>
-        <item>Bluetooth</item>
-        <item>VPN</item>
-        <item>WiFi</item>
-    </string-array>
-
-    <string-array name="bus_list">
-        <item>LiveDataBus</item>
-        <item>RxBus</item>
-        <item>EventBus</item>
-    </string-array>
-
-    <string-array name="bluetooth_list">
-        <item>Classic Bluetooth (经典蓝牙)</item>
-        <item>Bluetooth Low Energy (BLE，低功耗蓝牙)</item>
-    </string-array>
-
     <string-array name="patterns_list">
         <item>Factory Pattern(工厂模式)</item>
         <item>Abstract Factory Pattern(抽象工厂模式)</item>

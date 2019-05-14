@@ -4,16 +4,25 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import com.s.android.hiandroid.R
 import com.s.android.hiandroid.ui.common.BaseActivity
-import com.s.android.hiandroid.ui.common.OptionsMenu
+import com.s.android.hiandroid.ui.common.info.OptionsMenu
 import kotlinx.android.synthetic.main.activity_thread.*
 
 class ThreadActivity : BaseActivity() {
 
     override val optionsMenu: ArrayList<OptionsMenu>
         get() = arrayListOf(
-            OptionsMenu("线程基础", "http://www.jcodecraeer.com/plus/view.php?aid=9597"),
-            OptionsMenu("GitHub", "https://github.com/yangchong211/YCThreadPool"),
-            OptionsMenu("线程池", "https://mp.weixin.qq.com/s/9lytCZN_xSyGVGleCMenRA")
+            OptionsMenu(
+                "线程基础",
+                "http://www.jcodecraeer.com/plus/view.php?aid=9597"
+            ),
+            OptionsMenu(
+                "GitHub",
+                "https://github.com/yangchong211/YCThreadPool"
+            ),
+            OptionsMenu(
+                "线程池",
+                "https://mp.weixin.qq.com/s/9lytCZN_xSyGVGleCMenRA"
+            )
         )
 
     override fun getLayoutResID(): Int? {

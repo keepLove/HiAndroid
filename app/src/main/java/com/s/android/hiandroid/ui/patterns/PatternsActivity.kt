@@ -5,8 +5,9 @@ import android.os.Bundle
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.s.android.hiandroid.R
-import com.s.android.hiandroid.common.utils.getStringArray
+import com.s.android.hiandroid.common.utils.getStringListInfos
 import com.s.android.hiandroid.ui.common.BaseStringListActivity
+import com.s.android.hiandroid.ui.common.info.StringListInfo
 import com.s.android.hiandroid.ui.patterns.abstract_factory_pattern.AbstractFactoryPattern
 import com.s.android.hiandroid.ui.patterns.adapter_pattern.AdapterPattern
 import com.s.android.hiandroid.ui.patterns.bridge_pattern.BridgePattern
@@ -117,12 +118,12 @@ class PatternsActivity : BaseStringListActivity() {
         practiceList.add(VisitorPattern.practice)
     }
 
-    override fun getItems(): MutableList<String> {
-        return getStringArray(R.array.patterns_list)
+    override fun getItems(): MutableList<StringListInfo> {
+        return getStringListInfos(R.array.patterns_list, BasePatternsActivity::class.java)
     }
 
-    override fun onItemClick(adapter: BaseQuickAdapter<*, *>, view: View?, position: Int) {
-        startPatternActivity(stringListAdapter.getItem(position), contentList[position], practiceList[position])
+    override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
+        startPatternActivity(stringListAdapter.getItem(position)?.title, contentList[position], practiceList[position])
     }
 
     private fun startPatternActivity(title: String?, content: String?, practice: String?) {

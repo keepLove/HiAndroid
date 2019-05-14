@@ -12,16 +12,25 @@ import android.support.v4.content.LocalBroadcastManager
 import com.s.android.hiandroid.R
 import com.s.android.hiandroid.common.utils.showToastAndLog
 import com.s.android.hiandroid.ui.common.BaseActivity
-import com.s.android.hiandroid.ui.common.OptionsMenu
+import com.s.android.hiandroid.ui.common.info.OptionsMenu
 import kotlinx.android.synthetic.main.activity_vpn.*
 
 class VPNActivity : BaseActivity() {
 
     override val optionsMenu: ArrayList<OptionsMenu>
         get() = arrayListOf(
-            OptionsMenu("VPN 实现原理介绍", "https://www.infoq.cn/article/book-android-vpn"),
-            OptionsMenu("反射实现VPN连接", "https://blog.csdn.net/cyj88jyc/article/details/87982313"),
-            OptionsMenu("系统自带的VPN服务框架", "https://blog.csdn.net/roland_sun/article/details/46337171"),
+            OptionsMenu(
+                "VPN 实现原理介绍",
+                "https://www.infoq.cn/article/book-android-vpn"
+            ),
+            OptionsMenu(
+                "反射实现VPN连接",
+                "https://blog.csdn.net/cyj88jyc/article/details/87982313"
+            ),
+            OptionsMenu(
+                "系统自带的VPN服务框架",
+                "https://blog.csdn.net/roland_sun/article/details/46337171"
+            ),
             OptionsMenu("监听本地网络连接", "https://github.com/hexene/LocalVPN")
         )
 

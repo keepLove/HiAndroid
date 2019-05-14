@@ -1,17 +1,18 @@
 package com.s.android.hiandroid.ui.android.bus
 
+//import com.jeremyliao.liveeventbus.LiveEventBus
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
-//import com.jeremyliao.liveeventbus.LiveEventBus
 import com.s.android.hiandroid.common.bus.LiveDataBus
 import com.s.android.hiandroid.common.bus.RxBus
-import com.s.android.hiandroid.common.utils.getStringArray
 import com.s.android.hiandroid.common.utils.showToastAndLog
 import com.s.android.hiandroid.ui.common.BaseStringListActivity
+import com.s.android.hiandroid.ui.common.info.StringListInfo
+import com.s.android.hiandroid.ui.common.info.getStringListInfo
 import com.trello.rxlifecycle2.kotlin.bindToLifecycle
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.greenrobot.eventbus.EventBus
@@ -41,8 +42,12 @@ class BusActivity : BaseStringListActivity() {
             })
     }
 
-    override fun getItems(): MutableList<String> {
-        return getStringArray(com.s.android.hiandroid.R.array.bus_list)
+    override fun getItems(): MutableList<StringListInfo> {
+        return mutableListOf(
+            getStringListInfo("LiveDataBus", LiveDataBusActivity::class.java),
+            getStringListInfo("RxBus", RxBusActivity::class.java),
+            getStringListInfo("EventBus", EventBusActivity::class.java)
+        )
     }
 
     override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
