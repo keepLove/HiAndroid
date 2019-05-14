@@ -15,7 +15,10 @@ class JavaActivity : BaseStringListActivity() {
             getStringListInfo("线程和线程池", ThreadActivity::class.java),
             getStringListInfo("lock(锁)", LockActivity::class.java),
             getStringListInfo("动态代理", "https://www.cnblogs.com/gonjan-blog/p/6685611.html"),
-            getStringListInfo("枚举实现原理", "https://blog.csdn.net/mhmyqn/article/details/48087247")
+            getStringListInfo("枚举实现原理", "https://blog.csdn.net/mhmyqn/article/details/48087247"),
+            getStringListInfo("JVM", "https://blog.csdn.net/u011418943/article/details/89239290"),
+            getStringListInfo("类加载机制", "https://blog.csdn.net/u011418943/article/details/89314894"),
+            getStringListInfo("垃圾回收机制", "https://blog.csdn.net/u011418943/article/details/89281473")
         )
     }
 
