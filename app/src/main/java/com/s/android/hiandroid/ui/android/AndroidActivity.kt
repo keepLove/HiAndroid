@@ -17,7 +17,11 @@ class AndroidActivity : BaseStringListActivity() {
             getStringListInfo("Bluetooth", BluetoothListActivity::class.java),
             getStringListInfo("VPN", VPNActivity::class.java),
             getStringListInfo("WiFi", WiFiActivity::class.java),
-            getStringListInfo("AIDL", AIDLActivity::class.java)
+            getStringListInfo("AIDL", AIDLActivity::class.java),
+            getStringListInfo(
+                "自定义权限",
+                "https://mp.weixin.qq.com/s?__biz=MzIxNzU1Nzk3OQ==&mid=2247487197&idx=1&sn=1abf3bff6481d6b25511fc7043a13bc3&chksm=97f6b069a081397fd5f739b3a8ce8a5b245ee02f1b5899b556d9467720870768828f6f095082&scene=38#wechat_redirect"
+            )
         )
     }
 

@@ -35,6 +35,7 @@
     3. VPN
     4. WiFi
     5. AIDL
+    6. 自定义权限
     
 *  kotlin
 
