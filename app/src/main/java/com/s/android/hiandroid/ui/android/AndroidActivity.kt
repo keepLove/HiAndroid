@@ -1,5 +1,6 @@
 package com.s.android.hiandroid.ui.android
 
+import com.s.android.hiandroid.ui.android.aidl.AIDLActivity
 import com.s.android.hiandroid.ui.android.bluetooth.BluetoothListActivity
 import com.s.android.hiandroid.ui.android.bus.BusActivity
 import com.s.android.hiandroid.ui.android.vpn.VPNActivity
@@ -15,7 +16,8 @@ class AndroidActivity : BaseStringListActivity() {
             getStringListInfo("Bus", BusActivity::class.java),
             getStringListInfo("Bluetooth", BluetoothListActivity::class.java),
             getStringListInfo("VPN", VPNActivity::class.java),
-            getStringListInfo("WiFi", WiFiActivity::class.java)
+            getStringListInfo("WiFi", WiFiActivity::class.java),
+            getStringListInfo("AIDL", AIDLActivity::class.java)
         )
     }
 

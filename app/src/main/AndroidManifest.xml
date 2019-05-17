@@ -25,6 +25,12 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!-- aidl 自定义权限 -->
+    <permission
+        android:name="com.s.android.hiandroid.permission.ACCESS_OFFER_SERVICE"
+        android:protectionLevel="normal" />
+    <uses-permission android:name="com.s.android.hiandroid.permission.ACCESS_OFFER_SERVICE" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -33,6 +39,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.android.aidl.AIDLActivity" />
+        <service
+            android:name=".ui.android.aidl.RemoteService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.s.android.hiandroid.permission.ACCESS_OFFER_SERVICE"
+            android:process=":remote" />
+
         <activity android:name=".ui.android.wifi.WiFiActivity" />
         <activity
             android:name=".ui.android.bluetooth.BluetoothActivity"

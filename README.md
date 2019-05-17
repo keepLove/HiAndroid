@@ -34,6 +34,7 @@
 
     3. VPN
     4. WiFi
+    5. AIDL
     
 *  kotlin
 
