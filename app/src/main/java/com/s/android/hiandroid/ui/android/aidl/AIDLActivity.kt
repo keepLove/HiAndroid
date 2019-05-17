@@ -19,7 +19,8 @@ class AIDLActivity : BaseActivity() {
             OptionsMenu(
                 "AIDL",
                 "https://mp.weixin.qq.com/s/2AUugGBpqguzXNixOstLdQ"
-            )
+            ),
+            OptionsMenu("Messenger", "https://www.jianshu.com/p/c487310b59ed")
         )
     var manager: JobsInterface? = null
     private val mArrivedListener = object : IOnNewOfferArrivedInterface.Stub() {
