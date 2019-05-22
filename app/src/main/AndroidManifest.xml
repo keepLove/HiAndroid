@@ -1,34 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.s.android.hiandroid">
-
     <!-- 网络请求 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
-    <!-- 蓝牙 -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <!-- 启动设备发现或操作蓝牙设置 -->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!-- 如果您想声明您的应用程序仅对BLE-capable设备可用，android:required="true" -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 蓝牙 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" /> <!-- 启动设备发现或操作蓝牙设置 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- 如果您想声明您的应用程序仅对BLE-capable设备可用，android:required="true" -->
     <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="true" />
-    <!-- 在Android5.0之前，是默认申请GPS硬件功能的。而在Android 5.0 之后，需要在manifest 中申明GPS硬件模块功能的使用。 -->
-    <uses-feature android:name="android.hardware.location.gps" />
-    <!-- 在Android 6.0 及以上，还需要打开位置权限。如果应用没有位置权限，蓝牙扫描功能不能使用（其它蓝牙操作例如连接蓝牙设备和写入数据不受影响）。 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!-- wifi -->
+        android:required="true" /> <!-- 在Android5.0之前，是默认申请GPS硬件功能的。而在Android 5.0 之后，需要在manifest 中申明GPS硬件模块功能的使用。 -->
+    <uses-feature android:name="android.hardware.location.gps" /> <!-- 在Android 6.0 及以上，还需要打开位置权限。如果应用没有位置权限，蓝牙扫描功能不能使用（其它蓝牙操作例如连接蓝牙设备和写入数据不受影响）。 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- wifi -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <!-- aidl 自定义权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- aidl 自定义权限 -->
     <permission
         android:name="com.s.android.hiandroid.permission.ACCESS_OFFER_SERVICE"
         android:protectionLevel="normal" />
+
     <uses-permission android:name="com.s.android.hiandroid.permission.ACCESS_OFFER_SERVICE" />
 
     <application
@@ -39,7 +29,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.android.customview.CustomViewActivity"></activity>
         <activity android:name=".ui.android.aidl.AIDLActivity" />
+
         <service
             android:name=".ui.android.aidl.RemoteService"
             android:enabled="true"
