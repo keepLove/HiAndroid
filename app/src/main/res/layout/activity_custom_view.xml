@@ -24,6 +24,10 @@
             <com.s.android.hiandroid.ui.android.customview.CustomView1
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />
+
+            <com.s.android.hiandroid.ui.android.customview.CustomView2
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
