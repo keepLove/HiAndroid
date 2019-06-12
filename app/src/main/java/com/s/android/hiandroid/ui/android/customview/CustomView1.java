@@ -1,10 +1,7 @@
 package com.s.android.hiandroid.ui.android.customview;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
+import android.graphics.*;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -119,7 +116,9 @@ public final class CustomView1 extends View {
             canvas.drawArc(800, 100, 1000, 300, 180, 60, false, strokePaint);
         }
         // 绘制爱心
+        fillPaint.setShader(new LinearGradient(300, 400, 300, 700, Color.RED, Color.BLACK, Shader.TileMode.CLAMP));
         canvas.drawPath(lovePath, fillPaint);
+        fillPaint.setShader(null);
         // 绘制圆环
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             float rateAngle = 0;
