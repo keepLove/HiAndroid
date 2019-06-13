@@ -29,6 +29,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.android.touch.NestedScrollingActivity"></activity>
         <activity
             android:name=".ui.android.customview.CustomViewActivity"
             android:hardwareAccelerated="false" />

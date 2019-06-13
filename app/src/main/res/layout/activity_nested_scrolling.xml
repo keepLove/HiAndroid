@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.android.touch.NestedScrollingActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.s.android.hiandroid.ui.android.touch.NestedScrollingParentViewGroup
+        android:id="@+id/nestedScrollingParent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@null"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:text="这是不动的" />
+
+        <com.s.android.hiandroid.ui.android.touch.NestedScrollingChildView
+            android:id="@+id/nestedScrollingChild"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/yellow"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="123\n456\n789\n111\n222\n333\n444\n555\n666\n777\n888\n999\n14\n12\n13\n44\n55\n66\n77\n88\n99\n11\n22\n33\n44\n55\n66\n77\n88\n99\n77\n88\n88\n8\n88\n88\n"
+                android:textColor="#f0f"
+                android:textSize="20sp" />
+        </com.s.android.hiandroid.ui.android.touch.NestedScrollingChildView>
+
+    </com.s.android.hiandroid.ui.android.touch.NestedScrollingParentViewGroup>
+</android.support.constraint.ConstraintLayout>
