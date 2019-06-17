@@ -29,6 +29,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp" />
 
+            <com.s.android.hiandroid.ui.android.customview.CustomTextView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="两端对齐：Follow your passion, stay true to yourself, never follow someone else's path.
+追随热情，忠于自我，绝不要追随别人的脚步。"
+                android:textSize="18sp" />
+
             <com.s.android.hiandroid.ui.android.customview.CustomView3
                 android:layout_width="match_parent"
                 android:layout_height="200dp" />
