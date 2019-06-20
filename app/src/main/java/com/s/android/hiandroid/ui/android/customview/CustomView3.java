@@ -21,6 +21,10 @@ public final class CustomView3 extends View {
     private int degrees;
     private ObjectAnimator objectAnimator;
 
+    private Paint arcPaint = new Paint();
+    private RectF arcRectF = new RectF();
+    private Rect textRect = new Rect();
+
     public CustomView3(Context context) {
         this(context, null);
     }
@@ -43,21 +47,38 @@ public final class CustomView3 extends View {
 
     private void init() {
         paint.setAntiAlias(true);
+        paint.setTextSize(50);
         matrix = new Matrix();
         camera = new Camera();
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.maps);
-        objectAnimator = ObjectAnimator.ofInt(this, "degrees", 0, 180);
-        objectAnimator.setDuration(2000);
-        objectAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        objectAnimator.setRepeatMode(ValueAnimator.REVERSE);
-        objectAnimator.setInterpolator(new LinearInterpolator());
         degrees = 45;
+
+        arcPaint.setAntiAlias(true);
+        arcPaint.setColor(Color.RED);
+        arcPaint.setStrokeWidth(20);
+        arcPaint.setStrokeCap(Paint.Cap.ROUND);
+        arcPaint.setStyle(Paint.Style.STROKE);
+    }
+
+    public ObjectAnimator getObjectAnimator() {
+        if (objectAnimator == null) {
+            objectAnimator = ObjectAnimator.ofInt(this, "degrees", 0, 180);
+            objectAnimator.setDuration(2000);
+            objectAnimator.setRepeatCount(ValueAnimator.INFINITE);
+            objectAnimator.setRepeatMode(ValueAnimator.REVERSE);
+            objectAnimator.setInterpolator(new LinearInterpolator());
+        }
+        return objectAnimator;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec),
+        setMeasuredDimension(getDefaultSize(bitmap.getWidth(), widthMeasureSpec),
                 getDefaultSize(bitmap.getHeight(), heightMeasureSpec));
+        arcRectF.right = getWidth() - 100;
+        arcRectF.left = arcRectF.right - bitmap.getWidth();
+        arcRectF.top = 20;
+        arcRectF.bottom = bitmap.getWidth() + 20;
     }
 
     @SuppressWarnings("unused")
@@ -69,48 +90,55 @@ public final class CustomView3 extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        objectAnimator.start();
+        getObjectAnimator().start();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        objectAnimator.end();
+        if (objectAnimator != null) {
+            getObjectAnimator().end();
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // 绘制图片循环旋转
         int bitmapWidth = bitmap.getWidth();
         int bitmapHeight = bitmap.getHeight();
         float bitmapWidthHalf = bitmapWidth / 2f;
         float bitmapHeightHalf = bitmapHeight / 2f;
-        int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
 
         // 第一步 裁剪上面不动的部分
         canvas.save();
-        canvas.clipRect(0, 0, getWidth(), centerY);
-        canvas.drawBitmap(bitmap, centerX - bitmapWidthHalf, centerY - bitmapHeightHalf, paint);
+        canvas.clipRect(0, 0, bitmapWidth, bitmapHeightHalf);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
         canvas.restore();
         // 第二步 旋转
         canvas.save();
         if (degrees > 90) {
-            canvas.clipRect(0, 0, getWidth(), centerY);
+            canvas.clipRect(0, 0, bitmapWidth, bitmapHeightHalf);
         } else {
-            canvas.clipRect(0, centerY, getWidth(), getHeight());
+            canvas.clipRect(0, bitmapHeightHalf, bitmapWidth, bitmapHeight);
         }
         matrix.reset();
         camera.save();
         camera.rotateX(degrees);
         camera.getMatrix(matrix);
         camera.restore();
-        matrix.preTranslate(-centerX, -centerY);
-        matrix.postTranslate(centerX, centerY);
+        matrix.preTranslate(-bitmapWidthHalf, -bitmapHeightHalf);
+        matrix.postTranslate(bitmapWidthHalf, bitmapHeightHalf);
         canvas.concat(matrix);
-        canvas.drawBitmap(bitmap, centerX - bitmapWidthHalf, centerY - bitmapHeightHalf, paint);
+        canvas.drawBitmap(bitmap, 0, 0, paint);
         canvas.restore();
+
+        // 绘制圆环
+        canvas.drawArc(arcRectF, -180, degrees, false, arcPaint);
+        String text = String.format("%s", degrees);
+        paint.getTextBounds(text, 0, text.length(), textRect);
+        canvas.drawText(text, arcRectF.centerX() - textRect.centerX(), arcRectF.centerY() + textRect.centerY(), paint);
     }
 
 }
