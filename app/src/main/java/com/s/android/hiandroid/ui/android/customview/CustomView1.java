@@ -68,9 +68,21 @@ public final class CustomView1 extends View {
         circleRangPaint.setStrokeCap(Paint.Cap.ROUND);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            lovePath.addArc(100, 400, 300, 600, -225, 225);
-            lovePath.arcTo(300, 400, 500, 600, -180, 225, false);
-            lovePath.lineTo(300, 700);
+//            lovePath.addArc(100, 400, 300, 600, -225, 225);
+//            lovePath.arcTo(300, 400, 500, 600, -180, 225, false);
+//            lovePath.lineTo(300, 700);
+            float startX = 300;
+            float startY = 500;
+            float endX = 300;
+            float endY = 700;
+            float firstSkewX = 100;
+            float firstSkewY = -100;
+            float secondSkewX = 200;
+            float secondSkewY = 60;
+            lovePath.moveTo(startX, startY);
+            lovePath.cubicTo(startX - firstSkewX, startY + firstSkewY, startX - secondSkewX, startY + secondSkewY, endX, endY);
+            lovePath.moveTo(startX, startY);
+            lovePath.cubicTo(startX + firstSkewX, startY + firstSkewY, startX + secondSkewX, startY + secondSkewY, endX, endY);
         }
     }
 

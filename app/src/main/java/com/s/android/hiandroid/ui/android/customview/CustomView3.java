@@ -75,7 +75,7 @@ public final class CustomView3 extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(getDefaultSize(bitmap.getWidth(), widthMeasureSpec),
                 getDefaultSize(bitmap.getHeight(), heightMeasureSpec));
-        arcRectF.right = getWidth() - 100;
+        arcRectF.right = getMeasuredWidth() - 100;
         arcRectF.left = arcRectF.right - bitmap.getWidth();
         arcRectF.top = 20;
         arcRectF.bottom = bitmap.getWidth() + 20;
