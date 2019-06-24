@@ -40,6 +40,10 @@
             <com.s.android.hiandroid.ui.android.customview.CustomView3
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <com.s.android.hiandroid.ui.android.customview.CustomView4
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

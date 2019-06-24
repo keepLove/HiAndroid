@@ -13,6 +13,10 @@
     - 动态代理
 *  android
     - 自定义View
+        1. 测量
+        2. 布局
+        3. 绘制
+        4. 仿 Flipboard 的折页效果
     - touch
         1. 事件分发
         2. NestedScroll
