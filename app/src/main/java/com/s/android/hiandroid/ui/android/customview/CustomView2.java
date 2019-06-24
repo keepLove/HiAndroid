@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
-import com.s.android.hiandroid.R;
 
 public final class CustomView2 extends View {
 
@@ -113,10 +112,6 @@ public final class CustomView2 extends View {
                 canvas.drawText(drawText, textX, endY, textPaint);
                 curAngle += sweepAngle;
             }
-
-            linePaint.setShader(new BitmapShader(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-            canvas.drawCircle(900, 300, 100, linePaint);
-            linePaint.setShader(null);
         }
     }
 
