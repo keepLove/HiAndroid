@@ -2,4 +2,5 @@
     <string name="app_name">Hi Android</string>
     <string name="layout_pattern_practice">实现</string>
     <string name="layout_pattern_content">介绍</string>
+    <string name="tv_justify_align_text">两端对齐：Follow your passion, stay true to yourself, never follow someone else\'s path. 追随热情，忠于自我，绝不要追随别人的脚步。</string>
 </resources>

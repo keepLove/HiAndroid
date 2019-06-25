@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f8f8f8"
     android:orientation="vertical"
     tools:context=".ui.android.customview.CustomViewActivity">
 
@@ -12,38 +14,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ScrollView
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="48dp"
+        android:background="@android:color/white"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+        app:tabTextColor="@color/black" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.s.android.hiandroid.ui.android.customview.CustomView1
-                android:layout_width="match_parent"
-                android:layout_height="300dp" />
-
-            <com.s.android.hiandroid.ui.android.customview.CustomView2
-                android:layout_width="match_parent"
-                android:layout_height="200dp" />
-
-            <com.s.android.hiandroid.ui.android.customview.CustomTextView
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="两端对齐：Follow your passion, stay true to yourself, never follow someone else's path.
-追随热情，忠于自我，绝不要追随别人的脚步。"
-                android:textSize="18sp" />
-
-            <com.s.android.hiandroid.ui.android.customview.CustomView3
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <com.s.android.hiandroid.ui.android.customview.CustomView4
-                android:layout_width="match_parent"
-                android:layout_height="200dp" />
-        </LinearLayout>
-    </ScrollView>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
