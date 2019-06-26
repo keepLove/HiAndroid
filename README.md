@@ -2,6 +2,12 @@
 
 为了学习安卓的项目
 
+## download
+
+扫描二维码下载或用手机浏览器输入这个网址:  [https://fir.im/2j1x](https://fir.im/2j1x)
+
+![下载App二维码](https://github.com/keepLove/HiAndroid/blob/master/download.png)
+
 ## structure
 
 *  java
