@@ -21,7 +21,8 @@ class CustomViewActivity : BaseActivity() {
         PageModel("基础绘制", R.layout.layout_custom_view1),
         PageModel("饼状图", R.layout.layout_custom_view2),
         PageModel("动画", R.layout.layout_custom_view3),
-        PageModel("仿Flipboard的折页效果", R.layout.layout_custom_view4)
+        PageModel("仿Flipboard的折页效果", R.layout.layout_custom_view4),
+        PageModel("仿即刻的点赞效果", R.layout.layout_custom_view5)
     )
 
     override fun getLayoutResID(): Int? {
