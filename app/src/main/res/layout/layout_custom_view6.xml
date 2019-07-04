@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.s.android.hiandroid.ui.android.customview.CustomView6 xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/ruler_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="5.2"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+    <com.s.android.hiandroid.ui.android.customview.BooheeRulerView
+        android:id="@+id/boohee_ruler"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:currentScale="5.2"
+        app:maxScale="10"
+        app:scaleInterval="0.2" />
+
+</com.s.android.hiandroid.ui.android.customview.CustomView6>

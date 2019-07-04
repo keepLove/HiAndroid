@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BooheeRulerView">
+        <!--最大最小刻度-->
+        <attr name="minScale" format="integer" />
+        <attr name="maxScale" format="integer" />
+        <!--当前刻度-->
+        <attr name="currentScale" format="float" />
+        <!--每个值的间隔-->
+        <attr name="scaleInterval" format="float" />
+        <!--间隔宽度-->
+        <attr name="intervalWidth" format="dimension" />
+        <!--数字文本颜色-->
+        <attr name="numTextSize" format="dimension" />
+        <attr name="numTextColor" format="color" />
+        <!--游标图片-->
+        <attr name="cursorDrawable" format="reference" />
+        <attr name="cursorHeight" format="dimension" />
+        <attr name="cursorWidth" format="dimension" />
+    </declare-styleable>
+</resources>

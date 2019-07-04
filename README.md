@@ -24,6 +24,7 @@
         3. 绘制
         4. 仿 Flipboard 的折页效果
         5. 仿即刻的点赞效果
+        6. 仿薄荷健康的卡尺效果
     - touch
         1. 事件分发
         2. NestedScroll
