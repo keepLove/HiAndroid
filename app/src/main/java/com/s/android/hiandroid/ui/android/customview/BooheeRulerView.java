@@ -1,5 +1,6 @@
 package com.s.android.hiandroid.ui.android.customview;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -17,6 +18,7 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Scroller;
 import com.s.android.hiandroid.R;
 
 import java.math.BigDecimal;
@@ -72,7 +74,16 @@ public class BooheeRulerView extends View {
      * 手势控制
      */
     private GestureDetectorCompat gestureDetectorCompat;
-
+    /**
+     * 动画
+     */
+    private ObjectAnimator animator = new ObjectAnimator();
+    private Scroller mScroller;
+    /**
+     * x轴滑动距离
+     */
+    private int lastScrollX = 0;
+    private boolean isSelfScroll = false;
     /**
      * 选中监听事件
      */
@@ -127,56 +138,19 @@ public class BooheeRulerView extends View {
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-                float intervalWidthHalf = intervalWidth / 2;
-                if (distanceX > 0) {  // 往左滑
-                    if (currentScale.floatValue() == maxScale) {
-                        if (moveX < 0) {
-                            if (moveX + distanceX > 0) {
-                                moveX = 0;
-                            } else {
-                                moveX += distanceX;
-                            }
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        if (moveX + distanceX < intervalWidthHalf) {
-                            moveX += distanceX;
-                        } else {
-                            moveX = -intervalWidthHalf;
-                            currentScale = currentScale.add(new BigDecimal(Float.toString(scaleInterval)));
-                            if (booheeRulerSelectedListener != null) {
-                                booheeRulerSelectedListener.onSelected(currentScale.floatValue());
-                            }
-                        }
-                    }
-                } else if (distanceX < 0) {  // 往右滑
-                    if (currentScale.floatValue() == minScale) {
-                        if (moveX > 0) {
-                            if (moveX + distanceX < 0) {
-                                moveX = 0;
-                            } else {
-                                moveX += distanceX;
-                            }
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        if (moveX + distanceX > -intervalWidthHalf) {
-                            moveX += distanceX;
-                        } else {
-                            moveX = intervalWidthHalf;
-                            currentScale = currentScale.subtract(new BigDecimal(Float.toString(scaleInterval)));
-                            if (booheeRulerSelectedListener != null) {
-                                booheeRulerSelectedListener.onSelected(currentScale.floatValue());
-                            }
-                        }
-                    }
-                }
+                return scrollX(distanceX);
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                mScroller.fling(getScrollX(), 0, (int) velocityX, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, 0, 0);
                 invalidate();
                 return true;
             }
         });
+        animator.setTarget(this);
+        animator.setPropertyName("moveX");
+        mScroller = new Scroller(context);
     }
 
     @Keep
@@ -192,6 +166,12 @@ public class BooheeRulerView extends View {
         invalidate();
     }
 
+    @Keep
+    public void setMoveX(float moveX) {
+        this.moveX = moveX;
+        invalidate();
+    }
+
     public void setBooheeRulerSelectedListener(@Nullable BooheeRulerSelectedListener booheeRulerSelectedListener) {
         this.booheeRulerSelectedListener = booheeRulerSelectedListener;
     }
@@ -199,9 +179,93 @@ public class BooheeRulerView extends View {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        super.onTouchEvent(event);
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                if (!mScroller.isFinished()) {
+                    mScroller.abortAnimation();
+                }
+                lastScrollX = 0;
+                getParent().requestDisallowInterceptTouchEvent(true);
+                isSelfScroll = true;
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                isSelfScroll = false;
+//                if (moveX != 0) {
+//                    animator.setFloatValues(moveX, 0);
+//                    animator.start();
+//                }
+                break;
+        }
         gestureDetectorCompat.onTouchEvent(event);
-        getParent().requestDisallowInterceptTouchEvent(true);
+        super.onTouchEvent(event);
+        return true;
+    }
+
+    @Override
+    public void computeScroll() {
+        if (!mScroller.computeScrollOffset()) {
+            lastScrollX = 0;
+            if (moveX != 0 && !isSelfScroll && !animator.isStarted()) {
+                animator.setFloatValues(moveX, 0);
+                animator.start();
+            }
+            return;
+        }
+        int currX = mScroller.getCurrX();
+        scrollX(lastScrollX - currX);
+        lastScrollX = currX;
+        invalidate();
+    }
+
+    private boolean scrollX(float distanceX) {
+        float intervalWidthHalf = intervalWidth / 2;
+        if (distanceX > 0) {  // 往左滑
+            if (currentScale.floatValue() == maxScale) {
+                if (moveX < 0) {
+                    if (moveX + distanceX > 0) {
+                        moveX = 0;
+                    } else {
+                        moveX += distanceX;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                if (moveX + distanceX < intervalWidthHalf) {
+                    moveX += distanceX;
+                } else {
+                    moveX = -intervalWidthHalf;
+                    currentScale = currentScale.add(new BigDecimal(Float.toString(scaleInterval)));
+                    if (booheeRulerSelectedListener != null) {
+                        booheeRulerSelectedListener.onSelected(currentScale.floatValue());
+                    }
+                }
+            }
+        } else if (distanceX < 0) {  // 往右滑
+            if (currentScale.floatValue() == minScale) {
+                if (moveX > 0) {
+                    if (moveX + distanceX < 0) {
+                        moveX = 0;
+                    } else {
+                        moveX += distanceX;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                if (moveX + distanceX > -intervalWidthHalf) {
+                    moveX += distanceX;
+                } else {
+                    moveX = intervalWidthHalf;
+                    currentScale = currentScale.subtract(new BigDecimal(Float.toString(scaleInterval)));
+                    if (booheeRulerSelectedListener != null) {
+                        booheeRulerSelectedListener.onSelected(currentScale.floatValue());
+                    }
+                }
+            }
+        }
+        invalidate();
         return true;
     }
 
