@@ -39,5 +39,7 @@
         2. Bluetooth Low Energy(BLE,低功耗蓝牙)
     - VPN
     - WiFi
+    - 其它
+        1. 水波纹效果
 *  kotlin
     - 实现单例的方式

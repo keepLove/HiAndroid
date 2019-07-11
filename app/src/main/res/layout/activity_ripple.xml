@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.android.other.RippleActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="在5.0以上，Button默认自带Ripple点击效果" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@mipmap/ic_launcher"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="但是如果设置了其他的background \n Ripple点击效果就没了" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="TextView默认是没有Ripple点击效果的" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_default"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="默认是圆形的、超出边界的波纹\n波纹的直径为控件宽高中的最大值" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_default"
+                android:clickable="true"
+                android:gravity="center"
+                android:text=" 但当波纹遇到其他控件的背景时，不会遮挡住其他控件的背景(比如不会挡住下面控件的背景)" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_item"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="用颜色作为Mask，不指定id\n此时item中的颜色会被用来作为点击前的背景颜色" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_item_mask"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="用颜色作为Mask，指定id\n此时item中的颜色没任何卵用，但可以用来限定边界" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_item_drawable"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="用图片作为Mask\n不指定id" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_item_drawable_mask"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="用图片作为Mask\n指定id" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_item_shape"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="用shape作为Mask\n不指定id，矩形" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_item_shape_round"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="用shape作为Mask\n指定id，圆形" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_item_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="搭配selector使用，不指定id \n将同时具有水波效果和selector效果" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/ripple_item_mask_selector"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="搭配selector使用，指定id \n和上面的一样，指定id后选择器效果将丢失" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="系统效果，无界" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/black" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="系统效果" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
