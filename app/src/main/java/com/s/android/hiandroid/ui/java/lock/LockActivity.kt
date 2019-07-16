@@ -12,6 +12,10 @@ class LockActivity : BaseActivity() {
     override val optionsMenu: ArrayList<OptionsMenu>
         get() = arrayListOf(
             OptionsMenu(
+                "Synchronized 简介",
+                "https://www.jianshu.com/p/49f4a8730833"
+            ),
+            OptionsMenu(
                 "Synchronized",
                 "https://mp.weixin.qq.com/s/JPM5KxqvjQ1uEzOwlA47yA"
             ),
