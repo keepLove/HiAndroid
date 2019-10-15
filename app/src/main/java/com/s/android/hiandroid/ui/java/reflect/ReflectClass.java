@@ -15,17 +15,44 @@ public class ReflectClass<T> extends ReflectBaseClass implements ReflectInterfac
     public T genericity;
     public Class<T> clazz;
 
-    public static void main(String[] args) {
-        Class<ReflectClass> aClass = ReflectClass.class;
-        try {
-            ReflectClass reflectClass = aClass.newInstance();
-            Field genericity = aClass.getDeclaredField("genericity");
-            genericity.setAccessible(true);
-            genericity.set(reflectClass, "泛型字段");
-            System.out.println(genericity.get(reflectClass));
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static ImmutableBoolean flag = new ImmutableBoolean();
+
+    public ReflectClass() {
+        super();
+        if (flag.getCount() <= 0) {
+            synchronized (ReflectClass.class) {
+                if (flag.getCount() <= 0) {
+                    flag.setCount();
+                } else {
+                    throw new RuntimeException("正在破坏单例模式1");
+                }
+            }
+        } else {
+            throw new RuntimeException("正在破坏单例模式2");
         }
+        System.out.println("class constructor");
+    }
+
+    public static void main(String[] args) throws Exception {
+        ReflectClass<String> reflectClass = new ReflectClass<>();
+        Field field = reflectClass.getClass().getDeclaredField("flag");
+        ImmutableBoolean immutableBoolean = (ImmutableBoolean) field.get(reflectClass);
+        Field count = immutableBoolean.getClass().getDeclaredField("count");
+        count.setAccessible(true);
+        count.set(immutableBoolean, 0);
+        ReflectClass reflectClass1 = reflectClass.getClass().getConstructor().newInstance();
+        System.out.println(reflectClass == reflectClass1);
+//        Class<ReflectClass> aClass = ReflectClass.class;
+//        try {
+//            ReflectClass reflectClass = aClass.newInstance();
+//            Field genericity = aClass.getDeclaredField("genericity");
+//            genericity.setAccessible(true);
+//            genericity.set(reflectClass, "泛型字段");
+//            System.out.println(genericity.get(reflectClass));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
 //        ReflectClass<String> reflectClass = new ReflectClass<>();
 //        reflectClass.testConstructorGet();
 //        reflectClass.getOtherMethod();
@@ -34,9 +61,25 @@ public class ReflectClass<T> extends ReflectBaseClass implements ReflectInterfac
 //        reflectClass.getClazzType();
     }
 
-    public ReflectClass() {
-        super();
-        System.out.println("class constructor");
+    private static class ImmutableBoolean {
+        private static int count = 0;
+
+        public ImmutableBoolean() {
+        }
+
+        public void setCount() {
+            synchronized (ReflectClass.class) {
+                if (count <= 0) {
+                    count++;
+                } else {
+                    throw new RuntimeException("");
+                }
+            }
+        }
+
+        public int getCount() {
+            return count;
+        }
     }
 
     public ReflectClass(String message) {

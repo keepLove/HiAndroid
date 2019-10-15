@@ -1,9 +1,9 @@
 package com.s.android.hiandroid.ui.android.bus
 
+//import com.jeremyliao.liveeventbus.LiveEventBus
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-//import com.jeremyliao.liveeventbus.LiveEventBus
 import com.s.android.hiandroid.common.bus.LiveDataBus
 import com.s.android.hiandroid.common.utils.showToast
 import com.s.android.hiandroid.common.utils.showToastAndLog

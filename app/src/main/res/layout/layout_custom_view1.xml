@@ -9,6 +9,11 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <com.s.android.hiandroid.ui.android.customview.TestCustomView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center" />
+
     <com.s.android.hiandroid.ui.android.customview.CustomTextView
         android:layout_width="300dp"
         android:layout_height="200dp"
