@@ -7,6 +7,10 @@ buildscript {
         jcenter()
         mavenCentral()
         maven { url 'https://jitpack.io' }
+        // 本地maven库
+//        maven {
+//            url uri('D:\\/repository')
+//        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.0'

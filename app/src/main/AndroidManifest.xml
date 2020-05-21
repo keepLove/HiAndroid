@@ -29,7 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.android.other.OtherActivity"></activity>
+        <activity android:name=".ui.android.opengl.OpenGLActivity"></activity>
+        <activity android:name=".ui.android.other.OtherActivity" />
         <activity android:name=".ui.android.other.RippleActivity" />
         <activity android:name=".ui.android.touch.NestedScrollingActivity" />
         <activity

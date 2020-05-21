@@ -4,6 +4,7 @@ import com.s.android.hiandroid.ui.android.aidl.AIDLActivity
 import com.s.android.hiandroid.ui.android.bluetooth.BluetoothListActivity
 import com.s.android.hiandroid.ui.android.bus.BusActivity
 import com.s.android.hiandroid.ui.android.customview.CustomViewActivity
+import com.s.android.hiandroid.ui.android.opengl.OpenGLActivity
 import com.s.android.hiandroid.ui.android.other.OtherActivity
 import com.s.android.hiandroid.ui.android.touch.NestedScrollingActivity
 import com.s.android.hiandroid.ui.android.vpn.VPNActivity
@@ -17,6 +18,7 @@ class AndroidActivity : BaseStringListActivity() {
     override fun getItems(): MutableList<StringListInfo> {
         return mutableListOf(
             getStringListInfo("自定义View", CustomViewActivity::class.java),
+            getStringListInfo("OpenGL", OpenGLActivity::class.java),
             getStringListInfo("Touch", NestedScrollingActivity::class.java),
             getStringListInfo("Bus", BusActivity::class.java),
             getStringListInfo("Bluetooth", BluetoothListActivity::class.java),
