@@ -2,6 +2,7 @@ package com.s.android.hiandroid.ui.main
 
 import android.os.Bundle
 import com.s.android.hiandroid.R
+import com.s.android.hiandroid.common.utils.logD
 import com.s.android.hiandroid.common.utils.showToast
 import com.s.android.hiandroid.ui.android.AndroidActivity
 import com.s.android.hiandroid.ui.common.BaseStringListActivity
@@ -19,6 +20,7 @@ class MainActivity : BaseStringListActivity() {
         supportActionBar?.setHomeButtonEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         showToast("test2")
+        logD("test2")
     }
 
     override fun getItems(): MutableList<StringListInfo> {
