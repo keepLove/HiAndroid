@@ -19,7 +19,7 @@ class MainActivity : BaseStringListActivity() {
         supportActionBar?.setTitle(R.string.app_name)
         supportActionBar?.setHomeButtonEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        showToast("test2")
+        showToast("test33333")
         logD("test2")
     }
 
